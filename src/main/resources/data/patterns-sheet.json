@@ -1,0 +1,2804 @@
+[
+  {
+    "name": "Sliding Window",
+    "problems": [
+      {
+        "title": "Maximum Sum Subarray of Size K",
+        "difficulty": "EASY",
+        "tags": [
+          "Array",
+          "Sliding Window"
+        ],
+        "externalUrl": null,
+        "statement": "Given an array of positive integers and an integer k, find the maximum sum of any contiguous subarray of size exactly k. Input: n and k on the first line, then n space-separated integers. Output: the maximum sum as a single integer.",
+        "timeComplexity": "O(n)",
+        "spaceComplexity": "O(1)",
+        "exampleInput": "arr = [2,1,5,1,3,2], k = 2",
+        "exampleOutput": "7",
+        "examples": [
+          {
+            "input": "arr = [2,3,4,1,5], k = 2",
+            "output": "7",
+            "explanation": "The subarray [3,4] has the largest sum of any size-2 window."
+          }
+        ],
+        "constraints": [
+          "1 <= k <= n <= 10^5",
+          "1 <= arr[i] <= 10^4"
+        ],
+        "hints": [
+          "Compute the sum of the first window of size k, then slide: add the entering element, subtract the leaving one.",
+          "Track the best sum seen as you slide, in O(1) per step instead of re-summing each window."
+        ],
+        "editorialUrl": null,
+        "videoUrl": null,
+        "testCases": [
+          {
+            "input": "5 2\n2 3 4 1 5",
+            "expectedOutput": "7",
+            "sample": true
+          },
+          {
+            "input": "6 2\n2 1 5 1 3 2",
+            "expectedOutput": "6",
+            "sample": false
+          }
+        ]
+      },
+      {
+        "title": "Smallest Subarray with a Given Sum",
+        "difficulty": "MEDIUM",
+        "tags": [
+          "Array",
+          "Sliding Window"
+        ],
+        "externalUrl": null,
+        "statement": "Given an array of positive integers and a target sum S, find the length of the smallest contiguous subarray whose sum is greater than or equal to S. Return 0 if no such subarray exists. Input: n and S on the first line, then n space-separated integers. Output: the length as a single integer.",
+        "timeComplexity": "O(n)",
+        "spaceComplexity": "O(1)",
+        "exampleInput": "arr = [2,1,5,2,3,2], S = 7",
+        "exampleOutput": "2",
+        "examples": [
+          {
+            "input": "arr = [2,1,5,2,3,2], S = 7",
+            "output": "2",
+            "explanation": "[5,2] sums to 7 and is the shortest such window."
+          }
+        ],
+        "constraints": [
+          "1 <= n <= 10^5",
+          "1 <= arr[i] <= 10^4",
+          "1 <= S <= 10^9"
+        ],
+        "hints": [
+          "Grow a window from the right, adding elements to a running sum.",
+          "Whenever the running sum meets S, shrink from the left as far as possible while recording the best length."
+        ],
+        "editorialUrl": null,
+        "videoUrl": null,
+        "testCases": [
+          {
+            "input": "6 7\n2 1 5 2 3 2",
+            "expectedOutput": "2",
+            "sample": true
+          },
+          {
+            "input": "3 10\n1 1 1",
+            "expectedOutput": "0",
+            "sample": false
+          }
+        ]
+      },
+      {
+        "title": "Longest Substring with K Distinct Characters",
+        "difficulty": "MEDIUM",
+        "tags": [
+          "String",
+          "Sliding Window",
+          "Hashing"
+        ],
+        "externalUrl": null,
+        "statement": "Given a string and an integer K, find the length of the longest substring that contains at most K distinct characters. Input: the string on the first line, K on the second line. Output: the length as a single integer.",
+        "timeComplexity": "O(n)",
+        "spaceComplexity": "O(k)",
+        "exampleInput": "s = \"araaci\", K = 2",
+        "exampleOutput": "4",
+        "examples": [
+          {
+            "input": "s = \"araaci\", K = 2",
+            "output": "4",
+            "explanation": "\"araa\" has only 'a' and 'r', length 4."
+          }
+        ],
+        "constraints": [
+          "1 <= s.length <= 10^5",
+          "1 <= K <= 26"
+        ],
+        "hints": [
+          "Expand the window to the right, tracking a frequency map of characters inside it.",
+          "Whenever the map has more than K distinct keys, shrink from the left until it doesn't."
+        ],
+        "editorialUrl": null,
+        "videoUrl": null,
+        "testCases": [
+          {
+            "input": "araaci\n2",
+            "expectedOutput": "4",
+            "sample": true
+          },
+          {
+            "input": "cbbebi\n3",
+            "expectedOutput": "5",
+            "sample": false
+          }
+        ]
+      },
+      {
+        "title": "Fruits into Baskets",
+        "difficulty": "MEDIUM",
+        "tags": [
+          "Array",
+          "Sliding Window"
+        ],
+        "externalUrl": null,
+        "statement": "You are picking fruit from a row of trees (given as an array where each value is a fruit type). You have two baskets, each can hold only one type of fruit, unlimited quantity. Find the length of the longest contiguous run of trees you can pick from (equivalently: the longest subarray with at most 2 distinct values). Input: n on the first line, then n space-separated integers (fruit types). Output: the length as a single integer.",
+        "timeComplexity": "O(n)",
+        "spaceComplexity": "O(1)",
+        "exampleInput": "fruits = [1,2,1,2,3]",
+        "exampleOutput": "4",
+        "examples": [
+          {
+            "input": "fruits = [1,2,1,2,3]",
+            "output": "4",
+            "explanation": "Picking [1,2,1,2] uses only two types."
+          }
+        ],
+        "constraints": [
+          "1 <= n <= 10^5"
+        ],
+        "hints": [
+          "This is 'longest substring with at most K distinct' with K = 2.",
+          "Track counts of each fruit type in the window; shrink from the left when a third type appears."
+        ],
+        "editorialUrl": null,
+        "videoUrl": null,
+        "testCases": [
+          {
+            "input": "5\n1 2 1 2 3",
+            "expectedOutput": "4",
+            "sample": true
+          },
+          {
+            "input": "5\n1 2 3 2 2",
+            "expectedOutput": "4",
+            "sample": false
+          }
+        ]
+      },
+      {
+        "title": "Longest Substring Without Repeating Characters",
+        "difficulty": "MEDIUM",
+        "tags": [
+          "String",
+          "Sliding Window",
+          "Hashing"
+        ],
+        "externalUrl": "https://leetcode.com/problems/longest-substring-without-repeating-characters/",
+        "statement": "Given a string, find the length of the longest substring without repeating characters. Input: the string on a single line. Output: the length as a single integer.",
+        "timeComplexity": "O(n)",
+        "spaceComplexity": "O(min(n, alphabet size))",
+        "exampleInput": "s = \"abcabcbb\"",
+        "exampleOutput": "3",
+        "examples": [
+          {
+            "input": "s = \"abcabcbb\"",
+            "output": "3",
+            "explanation": "\"abc\" is the longest run with no repeats."
+          }
+        ],
+        "constraints": [
+          "0 <= s.length <= 5 * 10^4"
+        ],
+        "hints": [
+          "Keep a window and a map of the last index each character was seen at.",
+          "When you see a repeat inside the window, jump the window's start to just past its previous occurrence."
+        ],
+        "editorialUrl": null,
+        "videoUrl": null,
+        "testCases": [
+          {
+            "input": "abcabcbb",
+            "expectedOutput": "3",
+            "sample": true
+          },
+          {
+            "input": "bbbbb",
+            "expectedOutput": "1",
+            "sample": false
+          }
+        ]
+      },
+      {
+        "title": "Permutation in String",
+        "difficulty": "MEDIUM",
+        "tags": [
+          "String",
+          "Sliding Window",
+          "Hashing"
+        ],
+        "externalUrl": "https://leetcode.com/problems/permutation-in-string/",
+        "statement": "Given two strings s1 and s2, return true if s2 contains a permutation of s1 as a contiguous substring, false otherwise. Input: s1 on the first line, s2 on the second line. Output: \"true\" or \"false\".",
+        "timeComplexity": "O(n)",
+        "spaceComplexity": "O(26)",
+        "exampleInput": "s1 = \"ab\", s2 = \"eidbaooo\"",
+        "exampleOutput": "true",
+        "examples": [
+          {
+            "input": "s1 = \"ab\", s2 = \"eidbaooo\"",
+            "output": "true",
+            "explanation": "\"ba\" (a permutation of \"ab\") appears in s2."
+          }
+        ],
+        "constraints": [
+          "1 <= s1.length, s2.length <= 10^4",
+          "lowercase English letters only"
+        ],
+        "hints": [
+          "A permutation match means a fixed-size window of s2 has exactly the same character counts as s1.",
+          "Slide a window of size len(s1) across s2, maintaining a running character-count comparison."
+        ],
+        "editorialUrl": null,
+        "videoUrl": null,
+        "testCases": [
+          {
+            "input": "ab\neidbaooo",
+            "expectedOutput": "true",
+            "sample": true
+          },
+          {
+            "input": "ab\neidboaoo",
+            "expectedOutput": "false",
+            "sample": false
+          }
+        ]
+      },
+      {
+        "title": "Minimum Window Substring",
+        "difficulty": "HARD",
+        "tags": [
+          "String",
+          "Sliding Window",
+          "Hashing"
+        ],
+        "externalUrl": "https://leetcode.com/problems/minimum-window-substring/",
+        "statement": "Given strings s and t, return the smallest substring of s that contains every character of t (including duplicates) at least as many times as it appears in t. Return an empty line if no such substring exists. Input: s on the first line, t on the second line. Output: the minimum window substring (or an empty line).",
+        "timeComplexity": "O(n + m)",
+        "spaceComplexity": "O(alphabet size)",
+        "exampleInput": "s = \"ADOBECODEBANC\", t = \"ABC\"",
+        "exampleOutput": "\"BANC\"",
+        "examples": [
+          {
+            "input": "s = \"ADOBECODEBANC\", t = \"ABC\"",
+            "output": "\"BANC\"",
+            "explanation": "\"BANC\" is the shortest window of s containing an 'A', a 'B', and a 'C'."
+          }
+        ],
+        "constraints": [
+          "1 <= s.length, t.length <= 10^5"
+        ],
+        "hints": [
+          "Track how many of t's required characters are still 'missing' from the current window.",
+          "Expand the window until nothing is missing, then shrink from the left to tighten it, recording the best window found."
+        ],
+        "editorialUrl": null,
+        "videoUrl": null,
+        "testCases": [
+          {
+            "input": "ADOBECODEBANC\nABC",
+            "expectedOutput": "BANC",
+            "sample": true
+          },
+          {
+            "input": "a\na",
+            "expectedOutput": "a",
+            "sample": false
+          }
+        ]
+      }
+    ]
+  },
+  {
+    "name": "Two Pointers",
+    "problems": [
+      {
+        "title": "Pair with Target Sum",
+        "difficulty": "EASY",
+        "tags": [
+          "Array",
+          "Two Pointers"
+        ],
+        "externalUrl": null,
+        "statement": "Given an array sorted in ascending order and a target sum, return the 0-based indices of the two numbers that add up to the target, smaller index first. Exactly one valid pair exists. Input: n and target on the first line, then n space-separated sorted integers. Output: the two indices, space-separated.",
+        "timeComplexity": "O(n)",
+        "spaceComplexity": "O(1)",
+        "exampleInput": "arr = [1,2,3,4,6], target = 6",
+        "exampleOutput": "1 3",
+        "examples": [
+          {
+            "input": "arr = [1,2,3,4,6], target = 6",
+            "output": "1 3",
+            "explanation": "arr[1] + arr[3] = 2 + 4 = 6."
+          }
+        ],
+        "constraints": [
+          "2 <= n <= 10^5",
+          "array is sorted ascending",
+          "exactly one valid pair exists"
+        ],
+        "hints": [
+          "Since the array is sorted, use two pointers starting at both ends.",
+          "If the sum is too small move the left pointer right; if too large move the right pointer left."
+        ],
+        "editorialUrl": null,
+        "videoUrl": null,
+        "testCases": [
+          {
+            "input": "5 6\n1 2 3 4 6",
+            "expectedOutput": "1 3",
+            "sample": true
+          },
+          {
+            "input": "4 11\n2 5 9 11",
+            "expectedOutput": "0 2",
+            "sample": false
+          }
+        ]
+      },
+      {
+        "title": "Remove Duplicates from Sorted Array",
+        "difficulty": "EASY",
+        "tags": [
+          "Array",
+          "Two Pointers"
+        ],
+        "externalUrl": "https://leetcode.com/problems/remove-duplicates-from-sorted-array/",
+        "statement": "Given an array sorted in ascending order, remove duplicates in-place so each unique value appears once, keeping relative order. Input: n on the first line, then n space-separated sorted integers. Output: the deduplicated values, space-separated, in order (the count of printed values is the new length).",
+        "timeComplexity": "O(n)",
+        "spaceComplexity": "O(1)",
+        "exampleInput": "arr = [2,3,3,3,6,9,9]",
+        "exampleOutput": "2 3 6 9",
+        "examples": [
+          {
+            "input": "arr = [2,3,3,3,6,9,9]",
+            "output": "2 3 6 9",
+            "explanation": "Each duplicate run collapses to one value."
+          }
+        ],
+        "constraints": [
+          "1 <= n <= 10^5"
+        ],
+        "hints": [
+          "Keep a 'write' pointer for the next unique slot and a 'read' pointer scanning forward.",
+          "Only advance the write pointer when the read pointer finds a value different from the last written one."
+        ],
+        "editorialUrl": null,
+        "videoUrl": null,
+        "testCases": [
+          {
+            "input": "7\n2 3 3 3 6 9 9",
+            "expectedOutput": "2 3 6 9",
+            "sample": true
+          },
+          {
+            "input": "4\n2 2 2 11",
+            "expectedOutput": "2 11",
+            "sample": false
+          }
+        ]
+      },
+      {
+        "title": "Squaring a Sorted Array",
+        "difficulty": "EASY",
+        "tags": [
+          "Array",
+          "Two Pointers"
+        ],
+        "externalUrl": "https://leetcode.com/problems/squares-of-a-sorted-array/",
+        "statement": "Given an array sorted in ascending order (values may be negative), return an array of the squares of each number, also sorted in ascending order. Input: n on the first line, then n space-separated sorted integers. Output: the squared values, space-separated, sorted ascending.",
+        "timeComplexity": "O(n)",
+        "spaceComplexity": "O(n)",
+        "exampleInput": "arr = [-2,-1,0,2,3]",
+        "exampleOutput": "0 1 4 4 9",
+        "examples": [
+          {
+            "input": "arr = [-2,-1,0,2,3]",
+            "output": "0 1 4 4 9",
+            "explanation": "Squares are [4,1,0,4,9]; sorted ascending gives [0,1,4,4,9]."
+          }
+        ],
+        "constraints": [
+          "1 <= n <= 10^5"
+        ],
+        "hints": [
+          "The largest square comes from whichever end (most negative or most positive) has the bigger absolute value.",
+          "Fill the result from the back using two pointers at both ends of the input, moving the one with the larger absolute value inward each step."
+        ],
+        "editorialUrl": null,
+        "videoUrl": null,
+        "testCases": [
+          {
+            "input": "5\n-2 -1 0 2 3",
+            "expectedOutput": "0 1 4 4 9",
+            "sample": true
+          },
+          {
+            "input": "5\n-3 -1 0 1 2",
+            "expectedOutput": "0 1 1 4 9",
+            "sample": false
+          }
+        ]
+      },
+      {
+        "title": "3Sum",
+        "difficulty": "MEDIUM",
+        "tags": [
+          "Array",
+          "Two Pointers",
+          "Sorting"
+        ],
+        "externalUrl": "https://leetcode.com/problems/3sum/",
+        "statement": "Given an array of integers, find all unique triplets that sum to zero. Input: n on the first line, then n space-separated integers. Output: one triplet per line, each as three space-separated integers in ascending order; triplets themselves ordered ascending by first element, then second, then third. Print nothing if there are none.",
+        "timeComplexity": "O(n^2)",
+        "spaceComplexity": "O(n) (sort) + output",
+        "exampleInput": "nums = [-1,0,1,2,-1,-4]",
+        "exampleOutput": "-1 -1 2\n-1 0 1",
+        "examples": [
+          {
+            "input": "nums = [-3,0,1,2,-1,1,-2]",
+            "output": "-3 1 2\n-2 0 2\n-2 1 1\n-1 0 1",
+            "explanation": "Every unique zero-sum triplet, sorted."
+          }
+        ],
+        "constraints": [
+          "3 <= n <= 3000"
+        ],
+        "hints": [
+          "Sort the array, then fix one element and two-pointer the remaining subarray for the other two.",
+          "Skip over duplicate values at each position (the fixed element, and both pointers) to avoid duplicate triplets."
+        ],
+        "editorialUrl": null,
+        "videoUrl": null,
+        "testCases": [
+          {
+            "input": "7\n-3 0 1 2 -1 1 -2",
+            "expectedOutput": "-3 1 2\n-2 0 2\n-2 1 1\n-1 0 1",
+            "sample": true
+          },
+          {
+            "input": "3\n0 0 0",
+            "expectedOutput": "0 0 0",
+            "sample": false
+          }
+        ]
+      },
+      {
+        "title": "3Sum Closest",
+        "difficulty": "MEDIUM",
+        "tags": [
+          "Array",
+          "Two Pointers",
+          "Sorting"
+        ],
+        "externalUrl": "https://leetcode.com/problems/3sum-closest/",
+        "statement": "Given an array of integers and a target, find the sum of three integers in the array closest to the target (exactly one such closest sum is expected for the given test data). Input: n and target on the first line, then n space-separated integers. Output: the closest sum as a single integer.",
+        "timeComplexity": "O(n^2)",
+        "spaceComplexity": "O(1) beyond sorting",
+        "exampleInput": "nums = [-1,2,1,-4], target = 1",
+        "exampleOutput": "2",
+        "examples": [
+          {
+            "input": "nums = [-1,2,1,-4], target = 1",
+            "output": "2",
+            "explanation": "-1 + 2 + 1 = 2 is closest to 1."
+          }
+        ],
+        "constraints": [
+          "3 <= n <= 500"
+        ],
+        "hints": [
+          "Sort the array, fix one element, and two-pointer the rest while tracking the closest sum found so far.",
+          "Move the pointer on the side that would bring the sum closer to the target."
+        ],
+        "editorialUrl": null,
+        "videoUrl": null,
+        "testCases": [
+          {
+            "input": "4 1\n-1 2 1 -4",
+            "expectedOutput": "2",
+            "sample": true
+          },
+          {
+            "input": "3 1\n0 0 0",
+            "expectedOutput": "0",
+            "sample": false
+          }
+        ]
+      },
+      {
+        "title": "Sort Colors",
+        "difficulty": "MEDIUM",
+        "tags": [
+          "Array",
+          "Two Pointers",
+          "Sorting"
+        ],
+        "externalUrl": "https://leetcode.com/problems/sort-colors/",
+        "statement": "Given an array containing only 0s, 1s, and 2s (representing red, white, blue), sort it in-place in a single pass using the Dutch National Flag approach. Input: n on the first line, then n space-separated values each 0, 1, or 2. Output: the sorted array, space-separated.",
+        "timeComplexity": "O(n)",
+        "spaceComplexity": "O(1)",
+        "exampleInput": "nums = [2,0,2,1,1,0]",
+        "exampleOutput": "0 0 1 1 2 2",
+        "examples": [
+          {
+            "input": "nums = [2,0,2,1,1,0]",
+            "output": "0 0 1 1 2 2",
+            "explanation": "All 0s first, then 1s, then 2s."
+          }
+        ],
+        "constraints": [
+          "1 <= n <= 300"
+        ],
+        "hints": [
+          "Use three pointers: low (boundary for 0s), mid (current), high (boundary for 2s).",
+          "Swap 0s to the front and 2s to the back as mid scans through, without a second pass."
+        ],
+        "editorialUrl": null,
+        "videoUrl": null,
+        "testCases": [
+          {
+            "input": "6\n2 0 2 1 1 0",
+            "expectedOutput": "0 0 1 1 2 2",
+            "sample": true
+          },
+          {
+            "input": "3\n2 0 1",
+            "expectedOutput": "0 1 2",
+            "sample": false
+          }
+        ]
+      },
+      {
+        "title": "Container With Most Water",
+        "difficulty": "MEDIUM",
+        "tags": [
+          "Array",
+          "Two Pointers",
+          "Greedy"
+        ],
+        "externalUrl": "https://leetcode.com/problems/container-with-most-water/",
+        "statement": "Given an array of heights representing vertical lines at each index, find two lines that together with the x-axis form a container holding the most water. Return the maximum area. Input: n on the first line, then n space-separated heights. Output: the maximum area as a single integer.",
+        "timeComplexity": "O(n)",
+        "spaceComplexity": "O(1)",
+        "exampleInput": "height = [1,8,6,2,5,4,8,3,7]",
+        "exampleOutput": "49",
+        "examples": [
+          {
+            "input": "height = [1,8,6,2,5,4,8,3,7]",
+            "output": "49",
+            "explanation": "Lines at index 1 (height 8) and index 8 (height 7): area = min(8,7) * (8-1) = 49."
+          }
+        ],
+        "constraints": [
+          "2 <= n <= 10^5"
+        ],
+        "hints": [
+          "Start with pointers at both ends; the area is limited by the shorter line.",
+          "Always move the pointer at the shorter line inward -- moving the taller one can only shrink the width without ever increasing the limiting height."
+        ],
+        "editorialUrl": null,
+        "videoUrl": null,
+        "testCases": [
+          {
+            "input": "9\n1 8 6 2 5 4 8 3 7",
+            "expectedOutput": "49",
+            "sample": true
+          },
+          {
+            "input": "2\n1 1",
+            "expectedOutput": "1",
+            "sample": false
+          }
+        ]
+      }
+    ]
+  },
+  {
+    "name": "Fast & Slow Pointers",
+    "problems": [
+      {
+        "title": "Linked List Cycle II",
+        "difficulty": "MEDIUM",
+        "tags": [
+          "Linked List",
+          "Two Pointers"
+        ],
+        "externalUrl": "https://leetcode.com/problems/linked-list-cycle-ii/",
+        "statement": "Given a linked list, return the 0-indexed position in the list where the cycle begins, or -1 if there is no cycle. Input: the list values, space-separated, then the 0-indexed position the tail connects back to on the next line (-1 for no cycle). Output: the 0-indexed position where the cycle begins, or -1.",
+        "timeComplexity": "O(n)",
+        "spaceComplexity": "O(1)",
+        "exampleInput": "head = [3,2,0,-4], cycle at index 1",
+        "exampleOutput": "1",
+        "constraints": [
+          "The number of nodes is in the range [0, 10^4]"
+        ],
+        "hints": [
+          "Floyd's cycle detection finds a meeting point inside the cycle first.",
+          "Once slow and fast meet, reset one pointer to head and advance both one step at a time -- they meet again exactly at the cycle's start."
+        ],
+        "testCases": [
+          {
+            "input": "3 2 0 -4\n1",
+            "expectedOutput": "1",
+            "sample": true
+          },
+          {
+            "input": "1\n-1",
+            "expectedOutput": "-1",
+            "sample": false
+          }
+        ]
+      },
+      {
+        "title": "Middle of the Linked List",
+        "difficulty": "EASY",
+        "tags": [
+          "Linked List",
+          "Two Pointers"
+        ],
+        "externalUrl": "https://leetcode.com/problems/middle-of-the-linked-list/",
+        "statement": "Given the head of a singly linked list, return the middle node. If there are two middle nodes, return the second one. Input: the list values, space-separated. Output: the list starting from the middle node onward, space-separated.",
+        "timeComplexity": "O(n)",
+        "spaceComplexity": "O(1)",
+        "exampleInput": "list = [1,2,3,4,5]",
+        "exampleOutput": "[3,4,5]",
+        "constraints": [
+          "The number of nodes is in the range [1, 100]"
+        ],
+        "hints": [
+          "Move a slow pointer one step and a fast pointer two steps at a time -- when fast reaches the end, slow is at the middle."
+        ],
+        "testCases": [
+          {
+            "input": "1 2 3 4 5",
+            "expectedOutput": "3 4 5",
+            "sample": true
+          },
+          {
+            "input": "1 2 3 4 5 6",
+            "expectedOutput": "4 5 6",
+            "sample": false
+          }
+        ]
+      },
+      {
+        "title": "Happy Number",
+        "difficulty": "EASY",
+        "tags": [
+          "Math",
+          "Two Pointers",
+          "Hashing"
+        ],
+        "externalUrl": "https://leetcode.com/problems/happy-number/",
+        "statement": "A happy number is defined by repeatedly replacing the number with the sum of the squares of its digits, until it either equals 1 (happy) or loops endlessly in a cycle that never reaches 1 (not happy). Given an integer n, determine if it is happy. Input: a single integer n. Output: \"true\" or \"false\".",
+        "timeComplexity": "O(log n)",
+        "spaceComplexity": "O(1)",
+        "exampleInput": "n = 19",
+        "exampleOutput": "true",
+        "constraints": [
+          "1 <= n <= 2^31 - 1"
+        ],
+        "hints": [
+          "Detect the cycle the same way you'd detect a cycle in a linked list: fast/slow pointers over the sequence of transformed values."
+        ],
+        "testCases": [
+          {
+            "input": "19",
+            "expectedOutput": "true",
+            "sample": true
+          },
+          {
+            "input": "2",
+            "expectedOutput": "false",
+            "sample": false
+          }
+        ]
+      },
+      {
+        "title": "Palindrome Linked List",
+        "difficulty": "EASY",
+        "tags": [
+          "Linked List",
+          "Two Pointers"
+        ],
+        "externalUrl": "https://leetcode.com/problems/palindrome-linked-list/",
+        "statement": "Given the head of a singly linked list, determine if it is a palindrome. Input: the list values, space-separated. Output: \"true\" or \"false\".",
+        "timeComplexity": "O(n)",
+        "spaceComplexity": "O(1)",
+        "exampleInput": "list = [1,2,2,1]",
+        "exampleOutput": "true",
+        "constraints": [
+          "The number of nodes is in the range [1, 10^5]"
+        ],
+        "hints": [
+          "Find the middle with slow/fast pointers, reverse the second half in place, then compare both halves."
+        ],
+        "testCases": [
+          {
+            "input": "1 2 2 1",
+            "expectedOutput": "true",
+            "sample": true
+          },
+          {
+            "input": "1 2",
+            "expectedOutput": "false",
+            "sample": false
+          }
+        ]
+      },
+      {
+        "title": "Circular Array Loop",
+        "difficulty": "MEDIUM",
+        "tags": [
+          "Array",
+          "Two Pointers"
+        ],
+        "externalUrl": "https://leetcode.com/problems/circular-array-loop/",
+        "statement": "Given a circular array nums of non-zero integers, nums[i] denotes the number of steps to move from index i: forward if positive, backward if negative, wrapping around circularly. Determine whether there is a cycle: a sequence of indices, all moving in the same direction, whose length is greater than 1 (a single index that maps back to itself does not count). Input: n on the first line, then n space-separated non-zero integers. Output: \"true\" or \"false\".",
+        "timeComplexity": "O(n)",
+        "spaceComplexity": "O(1)",
+        "exampleInput": "nums = [2,-1,1,2,2]",
+        "exampleOutput": "true",
+        "constraints": [
+          "1 <= nums.length <= 5000",
+          "nums[i] != 0"
+        ],
+        "hints": [
+          "Use slow/fast pointers per starting index, but only ever move in the direction the starting index dictates.",
+          "A cycle of length 1 (an index that points back to itself) doesn't count -- treat it as a dead end."
+        ],
+        "testCases": [
+          {
+            "input": "5\n2 -1 1 2 2",
+            "expectedOutput": "true",
+            "sample": true
+          },
+          {
+            "input": "2\n-1 2",
+            "expectedOutput": "false",
+            "sample": false
+          }
+        ]
+      }
+    ]
+  },
+  {
+    "name": "In-place Reversal of a Linked List",
+    "problems": [
+      {
+        "title": "Reverse Linked List",
+        "difficulty": "EASY",
+        "tags": [
+          "Linked List",
+          "Recursion"
+        ],
+        "externalUrl": "https://leetcode.com/problems/reverse-linked-list/",
+        "statement": "Given the head of a singly linked list, reverse it and return the new head. Input: the list values, space-separated, in order.",
+        "timeComplexity": "O(n)",
+        "spaceComplexity": "O(1)",
+        "exampleInput": "list = [1,2,3,4,5]",
+        "exampleOutput": "[5,4,3,2,1]",
+        "constraints": [
+          "The number of nodes is in the range [0, 5000]"
+        ],
+        "hints": [
+          "Walk the list once, re-pointing each node's `next` to the previous node as you go."
+        ],
+        "testCases": [
+          {
+            "input": "1 2 3 4 5",
+            "expectedOutput": "5 4 3 2 1",
+            "sample": true
+          },
+          {
+            "input": "7 3",
+            "expectedOutput": "3 7",
+            "sample": false
+          }
+        ]
+      },
+      {
+        "title": "Reverse Linked List II",
+        "difficulty": "MEDIUM",
+        "tags": [
+          "Linked List"
+        ],
+        "externalUrl": "https://leetcode.com/problems/reverse-linked-list-ii/",
+        "statement": "Given the head of a singly linked list and two integers left and right (1-indexed, left <= right), reverse only the nodes from position left to position right, and return the resulting list. Input: the list values, space-separated, on the first line, then \"left right\" on the second line. Output: the resulting list, space-separated.",
+        "timeComplexity": "O(n)",
+        "spaceComplexity": "O(1)",
+        "exampleInput": "list = [1,2,3,4,5], left = 2, right = 4",
+        "exampleOutput": "[1,4,3,2,5]",
+        "constraints": [
+          "The number of nodes is n",
+          "1 <= left <= right <= n"
+        ],
+        "hints": [
+          "Splice out the [left, right] sublist, reverse it in place with the standard technique, then reconnect it to the rest of the list."
+        ],
+        "testCases": [
+          {
+            "input": "1 2 3 4 5\n2 4",
+            "expectedOutput": "1 4 3 2 5",
+            "sample": true
+          },
+          {
+            "input": "5\n1 1",
+            "expectedOutput": "5",
+            "sample": false
+          }
+        ]
+      },
+      {
+        "title": "Reverse Nodes in k-Group",
+        "difficulty": "HARD",
+        "tags": [
+          "Linked List",
+          "Recursion"
+        ],
+        "externalUrl": "https://leetcode.com/problems/reverse-nodes-in-k-group/",
+        "statement": "Given the head of a linked list and an integer k, reverse the nodes of the list k at a time and return the modified list. If the number of nodes is not a multiple of k, leave the remaining nodes at the end as-is (unreversed). Input: the list values, space-separated, on the first line, then k on the second line. Output: the resulting list, space-separated.",
+        "timeComplexity": "O(n)",
+        "spaceComplexity": "O(1)",
+        "exampleInput": "list = [1,2,3,4,5], k = 2",
+        "exampleOutput": "[2,1,4,3,5]",
+        "constraints": [
+          "The number of nodes is n",
+          "1 <= k <= n"
+        ],
+        "hints": [
+          "Reverse each group of k nodes with the standard in-place reversal, then reconnect the groups; check first whether a full group of k nodes remains before reversing it."
+        ],
+        "testCases": [
+          {
+            "input": "1 2 3 4 5\n2",
+            "expectedOutput": "2 1 4 3 5",
+            "sample": true
+          },
+          {
+            "input": "1 2 3 4 5\n3",
+            "expectedOutput": "3 2 1 4 5",
+            "sample": false
+          }
+        ]
+      },
+      {
+        "title": "Rotate List",
+        "difficulty": "MEDIUM",
+        "tags": [
+          "Linked List",
+          "Two Pointers"
+        ],
+        "externalUrl": "https://leetcode.com/problems/rotate-list/",
+        "statement": "Given the head of a linked list, rotate the list to the right by k places and return the resulting list. Input: the list values, space-separated, on the first line, then k on the second line (k may be larger than the list length). Output: the resulting list, space-separated.",
+        "timeComplexity": "O(n)",
+        "spaceComplexity": "O(1)",
+        "exampleInput": "list = [1,2,3,4,5], k = 2",
+        "exampleOutput": "[4,5,1,2,3]",
+        "constraints": [
+          "The number of nodes is in the range [0, 500]",
+          "0 <= k <= 2 * 10^9"
+        ],
+        "hints": [
+          "Link the tail to the head to form a ring, walk to the new tail at position (n - k % n - 1), then break the ring there."
+        ],
+        "testCases": [
+          {
+            "input": "1 2 3 4 5\n2",
+            "expectedOutput": "4 5 1 2 3",
+            "sample": true
+          },
+          {
+            "input": "0 1 2\n4",
+            "expectedOutput": "2 0 1",
+            "sample": false
+          }
+        ]
+      }
+    ]
+  },
+  {
+    "name": "Cyclic Sort",
+    "problems": [
+      {
+        "title": "Cyclic Sort",
+        "difficulty": "EASY",
+        "tags": [
+          "Array",
+          "Sorting"
+        ],
+        "externalUrl": null,
+        "statement": "Given an array containing n distinct numbers taken from the range 1 to n (not necessarily sorted), sort it in place using the cyclic sort technique and return the sorted array. Input: n on the first line, then n space-separated integers. Output: the sorted array, space-separated.",
+        "timeComplexity": "O(n)",
+        "spaceComplexity": "O(1)",
+        "exampleInput": "nums = [3,1,5,4,2]",
+        "exampleOutput": "[1,2,3,4,5]",
+        "constraints": [
+          "1 <= n <= 10^4",
+          "nums is a permutation of [1, n]"
+        ],
+        "hints": [
+          "Each value v belongs at index v-1 -- walk the array swapping each element into its correct home position until every index holds the right value."
+        ],
+        "testCases": [
+          {
+            "input": "5\n3 1 5 4 2",
+            "expectedOutput": "1 2 3 4 5",
+            "sample": true
+          },
+          {
+            "input": "1\n1",
+            "expectedOutput": "1",
+            "sample": false
+          }
+        ]
+      },
+      {
+        "title": "Find the Missing Number",
+        "difficulty": "EASY",
+        "tags": [
+          "Array",
+          "Math"
+        ],
+        "externalUrl": "https://leetcode.com/problems/missing-number/",
+        "statement": "Given an array of n distinct numbers taken from the range [0, n] (so exactly one number in that range is missing), find and return the missing number. Input: n on the first line, then n space-separated integers. Output: the missing number.",
+        "timeComplexity": "O(n)",
+        "spaceComplexity": "O(1)",
+        "exampleInput": "nums = [3,0,1]",
+        "exampleOutput": "2",
+        "constraints": [
+          "n == nums.length",
+          "0 <= n <= 10^4"
+        ],
+        "hints": [
+          "Cyclic-sort each value v (0 <= v < n) to index v, then scan for the first index whose value doesn't match -- that index is the answer (n itself if every index matches)."
+        ],
+        "testCases": [
+          {
+            "input": "3\n3 0 1",
+            "expectedOutput": "2",
+            "sample": true
+          },
+          {
+            "input": "1\n1",
+            "expectedOutput": "0",
+            "sample": false
+          }
+        ]
+      },
+      {
+        "title": "Find All Missing Numbers",
+        "difficulty": "EASY",
+        "tags": [
+          "Array"
+        ],
+        "externalUrl": "https://leetcode.com/problems/find-all-numbers-disappeared-in-an-array/",
+        "statement": "Given an array nums of n integers where each nums[i] is in the range [1, n] (some values appear twice and some are missing), return all integers in [1, n] that do not appear in nums. Input: n on the first line, then n space-separated integers. Output: the missing numbers, space-separated in ascending order (a blank line if none are missing).",
+        "timeComplexity": "O(n)",
+        "spaceComplexity": "O(1) excluding the output array",
+        "exampleInput": "nums = [4,3,2,7,8,2,3,1]",
+        "exampleOutput": "[5,6]",
+        "constraints": [
+          "n == nums.length",
+          "1 <= n <= 10^5"
+        ],
+        "hints": [
+          "Cyclic-sort each value v to index v-1 where possible, then any index i whose value isn't i+1 means i+1 is missing."
+        ],
+        "testCases": [
+          {
+            "input": "8\n4 3 2 7 8 2 3 1",
+            "expectedOutput": "5 6",
+            "sample": true
+          },
+          {
+            "input": "2\n1 1",
+            "expectedOutput": "2",
+            "sample": false
+          }
+        ]
+      },
+      {
+        "title": "Find the Duplicate Number",
+        "difficulty": "MEDIUM",
+        "tags": [
+          "Array",
+          "Two Pointers",
+          "Binary Search"
+        ],
+        "externalUrl": "https://leetcode.com/problems/find-the-duplicate-number/",
+        "statement": "Given an array nums of n + 1 integers where each integer is in the range [1, n] inclusive, there is exactly one repeated number (which may repeat more than once) -- find it, without modifying the array and using only O(1) extra space. Input: the array length (n+1) on the first line, then that many space-separated integers. Output: the duplicate number.",
+        "timeComplexity": "O(n)",
+        "spaceComplexity": "O(1)",
+        "exampleInput": "nums = [1,3,4,2,2]",
+        "exampleOutput": "2",
+        "constraints": [
+          "1 <= n <= 10^5",
+          "nums.length == n + 1"
+        ],
+        "hints": [
+          "Treat nums[i] as a pointer to nums[nums[i]] -- the duplicate creates a cycle in this implicit linked structure, findable with Floyd's algorithm."
+        ],
+        "testCases": [
+          {
+            "input": "5\n1 3 4 2 2",
+            "expectedOutput": "2",
+            "sample": true
+          },
+          {
+            "input": "5\n3 1 3 4 2",
+            "expectedOutput": "3",
+            "sample": false
+          }
+        ]
+      },
+      {
+        "title": "Find All Duplicate Numbers",
+        "difficulty": "MEDIUM",
+        "tags": [
+          "Array"
+        ],
+        "externalUrl": "https://leetcode.com/problems/find-all-duplicates-in-an-array/",
+        "statement": "Given an integer array nums of n integers where each nums[i] is in the range [1, n] and each appears once or twice, return an array of all the integers that appear twice. Input: n on the first line, then n space-separated integers. Output: the duplicated numbers, space-separated in ascending order.",
+        "timeComplexity": "O(n)",
+        "spaceComplexity": "O(1) excluding the output array",
+        "exampleInput": "nums = [4,3,2,7,8,2,3,1]",
+        "exampleOutput": "[2,3]",
+        "constraints": [
+          "n == nums.length",
+          "1 <= n <= 10^5"
+        ],
+        "hints": [
+          "Cyclic-sort each value v to index v-1; any index i that already holds i+1 when you try to place another i+1 there reveals a duplicate."
+        ],
+        "testCases": [
+          {
+            "input": "8\n4 3 2 7 8 2 3 1",
+            "expectedOutput": "2 3",
+            "sample": true
+          },
+          {
+            "input": "3\n1 1 2",
+            "expectedOutput": "1",
+            "sample": false
+          }
+        ]
+      }
+    ]
+  },
+  {
+    "name": "Merge Intervals",
+    "problems": [
+      {
+        "title": "Merge Intervals",
+        "difficulty": "MEDIUM",
+        "tags": [
+          "Array",
+          "Sorting",
+          "Merge Intervals"
+        ],
+        "externalUrl": "https://leetcode.com/problems/merge-intervals/",
+        "statement": "Given a collection of intervals, merge all overlapping intervals and return the merged set, sorted by start. Input: n on the first line, then n lines each \"start end\". Output: the merged intervals, one per line as \"start end\", sorted by start.",
+        "timeComplexity": "O(n log n)",
+        "spaceComplexity": "O(n)",
+        "exampleInput": "intervals = [[1,3],[2,6],[8,10],[15,18]]",
+        "exampleOutput": "[[1,6],[8,10],[15,18]]",
+        "constraints": [
+          "1 <= n <= 10^4",
+          "intervals[i].length == 2"
+        ],
+        "hints": [
+          "Sort by start, then sweep, extending the current merged interval whenever the next one overlaps it."
+        ],
+        "testCases": [
+          {
+            "input": "4\n1 3\n2 6\n8 10\n15 18",
+            "expectedOutput": "1 6\n8 10\n15 18",
+            "sample": true
+          },
+          {
+            "input": "2\n1 4\n4 5",
+            "expectedOutput": "1 5",
+            "sample": false
+          }
+        ]
+      },
+      {
+        "title": "Insert Interval",
+        "difficulty": "MEDIUM",
+        "tags": [
+          "Array",
+          "Merge Intervals"
+        ],
+        "externalUrl": "https://leetcode.com/problems/insert-interval/",
+        "statement": "Given a list of non-overlapping intervals sorted by start, insert a new interval and merge if necessary. Input: n on the first line, then n lines each \"start end\" (the existing sorted, non-overlapping intervals), then one line \"start end\" for the new interval. Output: the resulting intervals after insertion and merging, one per line, sorted by start.",
+        "timeComplexity": "O(n)",
+        "spaceComplexity": "O(n)",
+        "exampleInput": "intervals = [[1,3],[6,9]], newInterval = [2,5]",
+        "exampleOutput": "[[1,5],[6,9]]",
+        "constraints": [
+          "0 <= n <= 10^4",
+          "intervals is sorted by start and non-overlapping"
+        ],
+        "hints": [
+          "Walk the intervals in order: copy every interval strictly before the new one, merge every interval that overlaps it, then copy the rest."
+        ],
+        "testCases": [
+          {
+            "input": "2\n1 3\n6 9\n2 5",
+            "expectedOutput": "1 5\n6 9",
+            "sample": true
+          },
+          {
+            "input": "1\n1 5\n2 3",
+            "expectedOutput": "1 5",
+            "sample": false
+          }
+        ]
+      },
+      {
+        "title": "Intervals Intersection",
+        "difficulty": "MEDIUM",
+        "tags": [
+          "Array",
+          "Two Pointers",
+          "Merge Intervals"
+        ],
+        "externalUrl": "https://leetcode.com/problems/interval-list-intersections/",
+        "statement": "Given two lists of closed intervals, each sorted and pairwise disjoint within its own list, return the intersection of the two lists. Input: n, then n lines \"start end\" for the first list; then m, then m lines \"start end\" for the second list. Output: the intersection intervals, one per line as \"start end\", in order.",
+        "timeComplexity": "O(n + m)",
+        "spaceComplexity": "O(n + m)",
+        "exampleInput": "A = [[0,2],[5,10],[13,23],[24,25]], B = [[1,5],[8,12],[15,24],[25,26]]",
+        "exampleOutput": "[[1,2],[5,5],[8,10],[15,23],[24,24],[25,25]]",
+        "constraints": [
+          "0 <= n, m <= 1000"
+        ],
+        "hints": [
+          "Two-pointer walk: the overlap of A[i] and B[j] is [max(startA,startB), min(endA,endB)] when that range is valid; advance whichever interval ends first."
+        ],
+        "testCases": [
+          {
+            "input": "4\n0 2\n5 10\n13 23\n24 25\n4\n1 5\n8 12\n15 24\n25 26",
+            "expectedOutput": "1 2\n5 5\n8 10\n15 23\n24 24\n25 25",
+            "sample": true
+          },
+          {
+            "input": "1\n1 3\n1\n2 4",
+            "expectedOutput": "2 3",
+            "sample": false
+          }
+        ]
+      },
+      {
+        "title": "Conflicting Appointments",
+        "difficulty": "EASY",
+        "tags": [
+          "Array",
+          "Sorting",
+          "Merge Intervals"
+        ],
+        "externalUrl": "https://leetcode.com/problems/meeting-rooms/",
+        "statement": "Given a list of appointment intervals, determine whether a single person could attend all of them (i.e. no two intervals overlap). Input: n on the first line, then n lines each \"start end\". Output: \"true\" if no two appointments overlap, \"false\" otherwise.",
+        "timeComplexity": "O(n log n)",
+        "spaceComplexity": "O(1)",
+        "exampleInput": "intervals = [[0,30],[5,10],[15,20]]",
+        "exampleOutput": "false",
+        "constraints": [
+          "0 <= n <= 10^4"
+        ],
+        "hints": [
+          "Sort by start time, then check that every interval's start is >= the previous interval's end."
+        ],
+        "testCases": [
+          {
+            "input": "3\n0 30\n5 10\n15 20",
+            "expectedOutput": "false",
+            "sample": true
+          },
+          {
+            "input": "2\n7 10\n2 4",
+            "expectedOutput": "true",
+            "sample": false
+          }
+        ]
+      }
+    ]
+  },
+  {
+    "name": "Tree Breadth-First Search",
+    "problems": [
+      {
+        "title": "Binary Tree Level Order Traversal",
+        "difficulty": "MEDIUM",
+        "tags": [
+          "Tree",
+          "Binary Tree",
+          "BFS"
+        ],
+        "externalUrl": "https://leetcode.com/problems/binary-tree-level-order-traversal/",
+        "statement": "Given the root of a binary tree, return the values of its nodes level by level, left to right. Input: the tree, level-order, space-separated, using \"null\" for missing children. Output one line per depth level, values space-separated.",
+        "timeComplexity": "O(n)",
+        "spaceComplexity": "O(n)",
+        "exampleInput": "root = [3,9,20,null,null,15,7]",
+        "exampleOutput": "[[3],[9,20],[15,7]]",
+        "constraints": [
+          "The number of nodes is within typical LeetCode limits for this problem"
+        ],
+        "hints": [
+          "A BFS queue naturally processes one level at a time if you track how many nodes are currently in the queue."
+        ],
+        "testCases": [
+          {
+            "input": "3 9 20 null null 15 7",
+            "expectedOutput": "3\n9 20\n15 7",
+            "sample": true
+          },
+          {
+            "input": "1",
+            "expectedOutput": "1",
+            "sample": false
+          }
+        ]
+      },
+      {
+        "title": "Binary Tree Zigzag Level Order Traversal",
+        "difficulty": "MEDIUM",
+        "tags": [
+          "Tree",
+          "Binary Tree",
+          "BFS"
+        ],
+        "externalUrl": "https://leetcode.com/problems/binary-tree-zigzag-level-order-traversal/",
+        "statement": "Given the root of a binary tree, return its nodes' values level by level, alternating between left-to-right and right-to-left for successive levels (level 0 is left-to-right). Input: the tree, level-order, space-separated, using \"null\" for missing children. Output one line per depth level, values space-separated in that level's traversal direction.",
+        "timeComplexity": "O(n)",
+        "spaceComplexity": "O(n)",
+        "exampleInput": "root = [3,9,20,null,null,15,7]",
+        "exampleOutput": "[[3],[20,9],[15,7]]",
+        "constraints": [
+          "The number of nodes is within typical LeetCode limits for this problem"
+        ],
+        "hints": [
+          "Do a normal level-order BFS, then reverse the collected values for every other level."
+        ],
+        "testCases": [
+          {
+            "input": "3 9 20 null null 15 7",
+            "expectedOutput": "3\n20 9\n15 7",
+            "sample": true
+          },
+          {
+            "input": "1 2 3 4",
+            "expectedOutput": "1\n3 2\n4",
+            "sample": false
+          }
+        ]
+      },
+      {
+        "title": "Binary Tree Level Averages",
+        "difficulty": "EASY",
+        "tags": [
+          "Tree",
+          "Binary Tree",
+          "BFS"
+        ],
+        "externalUrl": "https://leetcode.com/problems/average-of-levels-in-binary-tree/",
+        "statement": "Given the root of a binary tree, return the average value of the nodes on each level. Input: the tree, level-order, space-separated, using \"null\" for missing children. Output one line per level, the average of that level, printed as an integer when it has no fractional part, otherwise with exactly one decimal place.",
+        "timeComplexity": "O(n)",
+        "spaceComplexity": "O(n)",
+        "exampleInput": "root = [3,9,20,null,null,15,7]",
+        "exampleOutput": "[3, 14.5, 11]",
+        "constraints": [
+          "The number of nodes is within typical LeetCode limits for this problem"
+        ],
+        "hints": [
+          "Sum each level's values and divide by the count of nodes in that level, using the same BFS-by-level pattern as level order traversal."
+        ],
+        "testCases": [
+          {
+            "input": "3 9 20 null null 15 7",
+            "expectedOutput": "3\n14.5\n11",
+            "sample": true
+          },
+          {
+            "input": "3 9 20",
+            "expectedOutput": "3\n14.5",
+            "sample": false
+          }
+        ]
+      },
+      {
+        "title": "Minimum Depth of Binary Tree",
+        "difficulty": "EASY",
+        "tags": [
+          "Tree",
+          "Binary Tree",
+          "BFS"
+        ],
+        "externalUrl": "https://leetcode.com/problems/minimum-depth-of-binary-tree/",
+        "statement": "Given the root of a binary tree, find its minimum depth: the number of nodes along the shortest path from the root down to the nearest leaf node. A leaf is a node with no children -- a node with only one child does not count as reaching a leaf. Input: the tree, level-order, space-separated, using \"null\" for missing children. Output: the minimum depth as a single integer.",
+        "timeComplexity": "O(n)",
+        "spaceComplexity": "O(n)",
+        "exampleInput": "root = [3,9,20,null,null,15,7]",
+        "exampleOutput": "2",
+        "constraints": [
+          "The number of nodes is within typical LeetCode limits for this problem"
+        ],
+        "hints": [
+          "BFS level by level and stop at the first node with no children -- that guarantees the shortest path.",
+          "A node with exactly one child is not a leaf: you must keep descending on its non-null side."
+        ],
+        "testCases": [
+          {
+            "input": "3 9 20 null null 15 7",
+            "expectedOutput": "2",
+            "sample": true
+          },
+          {
+            "input": "2 null 3 null 4 null 5",
+            "expectedOutput": "4",
+            "sample": false
+          }
+        ]
+      },
+      {
+        "title": "Binary Tree Right Side View",
+        "difficulty": "MEDIUM",
+        "tags": [
+          "Tree",
+          "Binary Tree",
+          "BFS"
+        ],
+        "externalUrl": "https://leetcode.com/problems/binary-tree-right-side-view/",
+        "statement": "Given the root of a binary tree, imagine standing on the right side of it; return the values of the nodes you can see, ordered from top to bottom. Input: the tree, level-order, space-separated, using \"null\" for missing children. Output: one line, space-separated, the rightmost node's value at each level from top to bottom.",
+        "timeComplexity": "O(n)",
+        "spaceComplexity": "O(n)",
+        "exampleInput": "root = [1,2,3,null,5,null,4]",
+        "exampleOutput": "[1,3,4]",
+        "constraints": [
+          "The number of nodes is within typical LeetCode limits for this problem"
+        ],
+        "hints": [
+          "BFS level by level and keep only the last node visited at each level."
+        ],
+        "testCases": [
+          {
+            "input": "1 2 3 null 5 null 4",
+            "expectedOutput": "1 3 4",
+            "sample": true
+          },
+          {
+            "input": "1 null 3",
+            "expectedOutput": "1 3",
+            "sample": false
+          }
+        ]
+      }
+    ]
+  },
+  {
+    "name": "Tree Depth-First Search",
+    "problems": [
+      {
+        "title": "Path Sum",
+        "difficulty": "EASY",
+        "tags": [
+          "Tree",
+          "Binary Tree",
+          "DFS"
+        ],
+        "externalUrl": "https://leetcode.com/problems/path-sum/",
+        "statement": "Given the root of a binary tree and an integer target sum, return true if the tree has a root-to-leaf path such that the values along the path add up to the target sum. Input: the tree, level-order, space-separated, using \"null\" for missing children, on the first line; the target sum as an integer on the second line. Output: \"true\" or \"false\".",
+        "timeComplexity": "O(n)",
+        "spaceComplexity": "O(h)",
+        "exampleInput": "root = [5,4,8,11,null,13,4,7,2,null,null,null,1], targetSum = 22",
+        "exampleOutput": "true",
+        "constraints": [
+          "The number of nodes is within typical LeetCode limits for this problem"
+        ],
+        "hints": [
+          "DFS from the root, subtracting each node's value from the remaining target; at a leaf, check whether the remaining target equals that leaf's value."
+        ],
+        "testCases": [
+          {
+            "input": "5 4 8 11 null 13 4 7 2 null null null 1\n22",
+            "expectedOutput": "true",
+            "sample": true
+          },
+          {
+            "input": "1 2 3\n5",
+            "expectedOutput": "false",
+            "sample": false
+          }
+        ]
+      },
+      {
+        "title": "Path Sum II",
+        "difficulty": "MEDIUM",
+        "tags": [
+          "Tree",
+          "Binary Tree",
+          "DFS",
+          "Backtracking"
+        ],
+        "externalUrl": "https://leetcode.com/problems/path-sum-ii/",
+        "statement": "Given the root of a binary tree and an integer target sum, return all root-to-leaf paths where the sum of the node values equals the target sum. Input: the tree, level-order, space-separated, using \"null\" for missing children, on the first line; the target sum on the second line. Output: one line per matching path, its node values space-separated in root-to-leaf order, in the order a left-first DFS discovers them. Print nothing if there are no matching paths.",
+        "timeComplexity": "O(n^2)",
+        "spaceComplexity": "O(n)",
+        "exampleInput": "root = [5,4,8,11,null,13,4,7,2,null,null,null,1], targetSum = 22",
+        "exampleOutput": "[[5,4,11,2]]",
+        "constraints": [
+          "The number of nodes is within typical LeetCode limits for this problem"
+        ],
+        "hints": [
+          "DFS while keeping the current path on a stack/list; when you reach a leaf whose accumulated sum matches, record a copy of the path."
+        ],
+        "testCases": [
+          {
+            "input": "5 4 8 11 null 13 4 7 2 null null null 1\n22",
+            "expectedOutput": "5 4 11 2",
+            "sample": true
+          },
+          {
+            "input": "1 2 3\n4",
+            "expectedOutput": "1 3",
+            "sample": false
+          }
+        ]
+      },
+      {
+        "title": "Sum Root to Leaf Numbers",
+        "difficulty": "MEDIUM",
+        "tags": [
+          "Tree",
+          "Binary Tree",
+          "DFS"
+        ],
+        "externalUrl": "https://leetcode.com/problems/sum-root-to-leaf-numbers/",
+        "statement": "Each root-to-leaf path in a binary tree of single digits represents a number formed by concatenating the digits along the path. Return the total sum of all root-to-leaf numbers. Input: the tree, level-order, space-separated, using \"null\" for missing children. Output: the sum, as a single integer.",
+        "timeComplexity": "O(n)",
+        "spaceComplexity": "O(h)",
+        "exampleInput": "root = [1,2,3]",
+        "exampleOutput": "25",
+        "constraints": [
+          "Every node value is a single digit 0-9"
+        ],
+        "hints": [
+          "DFS carrying the number built so far (currentNumber * 10 + node.value); at a leaf, add it to a running total."
+        ],
+        "testCases": [
+          {
+            "input": "1 2 3",
+            "expectedOutput": "25",
+            "sample": true
+          },
+          {
+            "input": "4 9 0 5 1",
+            "expectedOutput": "1026",
+            "sample": false
+          }
+        ]
+      },
+      {
+        "title": "Diameter of Binary Tree",
+        "difficulty": "EASY",
+        "tags": [
+          "Tree",
+          "Binary Tree",
+          "DFS"
+        ],
+        "externalUrl": "https://leetcode.com/problems/diameter-of-binary-tree/",
+        "statement": "Given the root of a binary tree, return the length (in number of edges) of the longest path between any two nodes in the tree; this path may or may not pass through the root. Input: the tree, level-order, space-separated, using \"null\" for missing children. Output: the diameter, as a single integer.",
+        "timeComplexity": "O(n)",
+        "spaceComplexity": "O(h)",
+        "exampleInput": "root = [1,2,3,4,5]",
+        "exampleOutput": "3",
+        "constraints": [
+          "The number of nodes is within typical LeetCode limits for this problem"
+        ],
+        "hints": [
+          "For each node, compute its height via DFS; the best diameter through that node is leftHeight + rightHeight. Track the max over all nodes."
+        ],
+        "testCases": [
+          {
+            "input": "1 2 3 4 5",
+            "expectedOutput": "3",
+            "sample": true
+          },
+          {
+            "input": "1 2",
+            "expectedOutput": "1",
+            "sample": false
+          }
+        ]
+      },
+      {
+        "title": "Count Good Nodes in Binary Tree",
+        "difficulty": "MEDIUM",
+        "tags": [
+          "Tree",
+          "Binary Tree",
+          "DFS"
+        ],
+        "externalUrl": "https://leetcode.com/problems/count-good-nodes-in-binary-tree/",
+        "statement": "Given a binary tree, a node X is called good if, on the path from the root to X, no node has a value greater than X's value (the root is always good). Return the number of good nodes. Input: the tree, level-order, space-separated, using \"null\" for missing children. Output: the count of good nodes, as a single integer.",
+        "timeComplexity": "O(n)",
+        "spaceComplexity": "O(h)",
+        "exampleInput": "root = [3,1,4,3,null,1,5]",
+        "exampleOutput": "4",
+        "constraints": [
+          "The number of nodes is within typical LeetCode limits for this problem"
+        ],
+        "hints": [
+          "DFS carrying the maximum value seen so far on the current path; a node is good exactly when its value is >= that running maximum."
+        ],
+        "testCases": [
+          {
+            "input": "3 1 4 3 null 1 5",
+            "expectedOutput": "4",
+            "sample": true
+          },
+          {
+            "input": "3 3 3",
+            "expectedOutput": "3",
+            "sample": false
+          }
+        ]
+      }
+    ]
+  },
+  {
+    "name": "Two Heaps",
+    "problems": [
+      {
+        "title": "Sliding Window Median",
+        "difficulty": "HARD",
+        "tags": [
+          "Heap",
+          "Sliding Window",
+          "Two Heaps"
+        ],
+        "externalUrl": "https://leetcode.com/problems/sliding-window-median/",
+        "statement": "Given an array of integers and a window size k, return the median of each contiguous window of size k as it slides from left to right, one value per output line. Input: \"n k\" on the first line, then n space-separated integers on the second line. Output: one line per window (n-k+1 lines total), the median of that window -- printed as an integer when it has no fractional part, otherwise with exactly one decimal place (no trailing .0).",
+        "timeComplexity": "O(n log k)",
+        "spaceComplexity": "O(k)",
+        "exampleInput": "nums = [1,3,-1,-3,5,3,6,7], k = 3",
+        "exampleOutput": "[1,-1,-1,3,5,6]",
+        "constraints": [
+          "1 <= k <= n <= 10^5",
+          "-2^31 <= nums[i] <= 2^31 - 1"
+        ],
+        "hints": [
+          "Keep a max-heap for the smaller half and a min-heap for the larger half of the current window, balanced to within one element.",
+          "Removing an arbitrary element from a heap when the window slides is the tricky part -- lazy deletion (mark removed, skip when it surfaces) is the usual trick."
+        ],
+        "editorialUrl": null,
+        "videoUrl": null,
+        "testCases": [
+          {
+            "input": "8 3\n1 3 -1 -3 5 3 6 7",
+            "expectedOutput": "1\n-1\n-1\n3\n5\n6",
+            "sample": true
+          },
+          {
+            "input": "4 2\n1 2 3 4",
+            "expectedOutput": "1.5\n2.5\n3.5",
+            "sample": false
+          }
+        ]
+      },
+      {
+        "title": "IPO",
+        "difficulty": "HARD",
+        "tags": [
+          "Heap",
+          "Greedy",
+          "Two Heaps"
+        ],
+        "externalUrl": "https://leetcode.com/problems/ipo/",
+        "statement": "You start with capital w and may complete at most k distinct projects (each can be done at most once). Project i requires capital[i] to start and yields profit[i] when finished, after which its profit is added to your capital. Choose projects to maximize your final capital. Input: \"n k w\" on the first line (n = number of projects), then n space-separated profits, then n space-separated capital requirements. Output: the maximum final capital as a single integer.",
+        "timeComplexity": "O(n log n)",
+        "spaceComplexity": "O(n)",
+        "exampleInput": "k = 2, w = 0, profits = [1,2,3], capital = [0,1,1]",
+        "exampleOutput": "4",
+        "constraints": [
+          "1 <= k <= 10^5",
+          "0 <= w <= 10^9",
+          "n == profits.length == capital.length"
+        ],
+        "hints": [
+          "Sort projects by required capital. Push every project whose capital requirement you can now afford into a max-heap keyed by profit.",
+          "Repeatedly pop the most profitable affordable project, add its profit to your capital, then unlock any newly-affordable projects -- k times."
+        ],
+        "editorialUrl": null,
+        "videoUrl": null,
+        "testCases": [
+          {
+            "input": "3 2 0\n1 2 3\n0 1 1",
+            "expectedOutput": "4",
+            "sample": true
+          },
+          {
+            "input": "3 3 0\n1 2 3\n0 1 2",
+            "expectedOutput": "6",
+            "sample": false
+          }
+        ]
+      },
+      {
+        "title": "Kth Largest Element in a Stream",
+        "difficulty": "EASY",
+        "tags": [
+          "Heap",
+          "Design",
+          "Data Stream"
+        ],
+        "externalUrl": "https://leetcode.com/problems/kth-largest-element-in-a-stream/",
+        "statement": "Design a class initialized with an integer k and an initial array of numbers, that supports adding new numbers to the stream and, after each addition, reports the current kth largest element in the stream so far (counting duplicates -- e.g. with two 5s in the stream, the 1st and 2nd largest can both be 5). Input: \"n k\" on the first line (n = size of the initial array), then n space-separated integers, then a line with the number of add operations q, then q lines each \"add val\". Output: one line per add operation, the kth largest element after that addition.",
+        "timeComplexity": "O(log k) per add",
+        "spaceComplexity": "O(k)",
+        "exampleInput": "k = 3, nums = [4,5,8,2]; add(3), add(5), add(10), add(9), add(4)",
+        "exampleOutput": "4, 5, 5, 8, 8",
+        "constraints": [
+          "1 <= k <= 10^4",
+          "0 <= n",
+          "-10^4 <= values <= 10^4"
+        ],
+        "hints": [
+          "Keep a min-heap of size k containing the k largest elements seen so far -- its root is always the answer.",
+          "When adding a new number: push it, and if the heap grows past size k, pop the smallest."
+        ],
+        "editorialUrl": null,
+        "videoUrl": null,
+        "testCases": [
+          {
+            "input": "4 3\n4 5 8 2\n5\nadd 3\nadd 5\nadd 10\nadd 9\nadd 4",
+            "expectedOutput": "4\n5\n5\n8\n8",
+            "sample": true
+          },
+          {
+            "input": "2 2\n3 1\n2\nadd 5\nadd 2",
+            "expectedOutput": "3\n3",
+            "sample": false
+          }
+        ]
+      }
+    ]
+  },
+  {
+    "name": "Top K Elements",
+    "problems": [
+      {
+        "title": "Kth Largest Element in an Array",
+        "difficulty": "MEDIUM",
+        "tags": [
+          "Heap",
+          "Quickselect",
+          "Top K"
+        ],
+        "externalUrl": "https://leetcode.com/problems/kth-largest-element-in-an-array/",
+        "statement": "Given an integer array and an integer k, return the kth largest element in sorted order (counting duplicates individually, not the kth distinct value). Input: \"n k\" on the first line, then n space-separated integers. Output: the kth largest element as a single integer.",
+        "timeComplexity": "O(n) average with quickselect, O(n log k) with a heap",
+        "spaceComplexity": "O(1) to O(k)",
+        "exampleInput": "nums = [3,2,1,5,6,4], k = 2",
+        "exampleOutput": "5",
+        "constraints": [
+          "1 <= k <= n <= 10^5",
+          "-10^4 <= nums[i] <= 10^4"
+        ],
+        "hints": [
+          "A min-heap of size k, keeping only the k largest values seen, has the answer at its root once full.",
+          "Quickselect (partition like quicksort, recurse into only the side that contains the target rank) does it in expected O(n)."
+        ],
+        "editorialUrl": null,
+        "videoUrl": null,
+        "testCases": [
+          {
+            "input": "6 2\n3 2 1 5 6 4",
+            "expectedOutput": "5",
+            "sample": true
+          },
+          {
+            "input": "9 4\n3 2 3 1 2 4 5 5 6",
+            "expectedOutput": "4",
+            "sample": false
+          }
+        ]
+      },
+      {
+        "title": "K Closest Points to Origin",
+        "difficulty": "MEDIUM",
+        "tags": [
+          "Heap",
+          "Sort",
+          "Top K"
+        ],
+        "externalUrl": "https://leetcode.com/problems/k-closest-points-to-origin/",
+        "statement": "Given a list of 2D points and an integer k, return the k points closest to the origin (0, 0) by Euclidean distance. Input: \"n k\" on the first line, then n lines each \"x y\". Output: k lines each \"x y\", the chosen points sorted by distance to the origin ascending; break ties by x ascending, then y ascending.",
+        "timeComplexity": "O(n log k)",
+        "spaceComplexity": "O(k)",
+        "exampleInput": "points = [[1,3],[-2,2]], k = 1",
+        "exampleOutput": "[[-2,2]]",
+        "constraints": [
+          "1 <= k <= n <= 10^4",
+          "-10^4 <= x, y <= 10^4"
+        ],
+        "hints": [
+          "Compare squared distances to avoid floating point -- you never need the actual square root.",
+          "A max-heap of size k (by distance) lets you keep only the k closest points seen so far."
+        ],
+        "editorialUrl": null,
+        "videoUrl": null,
+        "testCases": [
+          {
+            "input": "2 1\n1 3\n-2 2",
+            "expectedOutput": "-2 2",
+            "sample": true
+          },
+          {
+            "input": "3 2\n3 3\n5 -1\n-2 4",
+            "expectedOutput": "3 3\n-2 4",
+            "sample": false
+          }
+        ]
+      },
+      {
+        "title": "Top K Frequent Words",
+        "difficulty": "MEDIUM",
+        "tags": [
+          "Heap",
+          "Hash Map",
+          "Top K"
+        ],
+        "externalUrl": "https://leetcode.com/problems/top-k-frequent-words/",
+        "statement": "Given a list of words and an integer k, return the k most frequent words. Sort by frequency descending; break ties alphabetically ascending. Input: \"n k\" on the first line, then n space-separated lowercase words on the second line. Output: k words, one per line, in that order.",
+        "timeComplexity": "O(n log k)",
+        "spaceComplexity": "O(n)",
+        "exampleInput": "words = [\"i\",\"love\",\"leetcode\",\"i\",\"love\",\"coding\"], k = 2",
+        "exampleOutput": "[\"i\",\"love\"]",
+        "constraints": [
+          "1 <= k <= number of distinct words <= n <= 500"
+        ],
+        "hints": [
+          "Count frequencies with a hash map first.",
+          "A heap ordered by (-frequency, word) naturally pops the most frequent, alphabetically-first words first."
+        ],
+        "editorialUrl": null,
+        "videoUrl": null,
+        "testCases": [
+          {
+            "input": "6 2\ni love leetcode i love coding",
+            "expectedOutput": "i\nlove",
+            "sample": true
+          },
+          {
+            "input": "10 4\nthe day is sunny the the the sunny is is",
+            "expectedOutput": "the\nis\nsunny\nday",
+            "sample": false
+          }
+        ]
+      },
+      {
+        "title": "Sort Characters By Frequency",
+        "difficulty": "MEDIUM",
+        "tags": [
+          "Heap",
+          "Hash Map",
+          "Sort"
+        ],
+        "externalUrl": "https://leetcode.com/problems/sort-characters-by-frequency/",
+        "statement": "Given a string, sort its characters by decreasing frequency, repeating each character exactly as many times as it occurred. Break ties between equally-frequent characters alphabetically ascending (so the result is fully deterministic). Input: the string on one line. Output: the rearranged string on one line.",
+        "timeComplexity": "O(n log n)",
+        "spaceComplexity": "O(n)",
+        "exampleInput": "s = \"tree\"",
+        "exampleOutput": "\"eert\"",
+        "constraints": [
+          "1 <= s.length <= 5 * 10^5",
+          "s consists of lowercase and/or uppercase letters"
+        ],
+        "hints": [
+          "Count each character's frequency, then sort characters by (-frequency, character).",
+          "Build the answer by repeating each character `frequency` times in that sorted order."
+        ],
+        "editorialUrl": null,
+        "videoUrl": null,
+        "testCases": [
+          {
+            "input": "tree",
+            "expectedOutput": "eert",
+            "sample": true
+          },
+          {
+            "input": "cccaaa",
+            "expectedOutput": "aaaccc",
+            "sample": false
+          }
+        ]
+      },
+      {
+        "title": "Kth Smallest Element in a Sorted Matrix",
+        "difficulty": "MEDIUM",
+        "tags": [
+          "Heap",
+          "Binary Search",
+          "Matrix"
+        ],
+        "externalUrl": "https://leetcode.com/problems/kth-smallest-element-in-a-sorted-matrix/",
+        "statement": "Given an n x n matrix where every row and every column is sorted in ascending order, and an integer k, return the kth smallest element in the matrix (counting duplicates). Input: \"n k\" on the first line, then n lines each with n space-separated integers (the matrix rows). Output: the kth smallest value as a single integer.",
+        "timeComplexity": "O(n log(max-min)) with binary search on value, or O(k log n) with a heap",
+        "spaceComplexity": "O(n) to O(1)",
+        "exampleInput": "matrix = [[1,5,9],[10,11,13],[12,13,15]], k = 8",
+        "exampleOutput": "13",
+        "constraints": [
+          "1 <= n <= 300",
+          "1 <= k <= n^2"
+        ],
+        "hints": [
+          "A min-heap seeded with the first element of each row, always popping the smallest and pushing its right neighbor, reaches the kth smallest in k pops.",
+          "Alternatively, binary search on the answer's value, using a linear-time 'count elements <= mid' scan as the check."
+        ],
+        "editorialUrl": null,
+        "videoUrl": null,
+        "testCases": [
+          {
+            "input": "3 8\n1 5 9\n10 11 13\n12 13 15",
+            "expectedOutput": "13",
+            "sample": true
+          },
+          {
+            "input": "1 1\n-5",
+            "expectedOutput": "-5",
+            "sample": false
+          }
+        ]
+      }
+    ]
+  },
+  {
+    "name": "K-way Merge",
+    "problems": [
+      {
+        "title": "Merge Two Sorted Arrays",
+        "difficulty": "EASY",
+        "tags": [
+          "Two Pointers",
+          "Merge",
+          "K-way Merge"
+        ],
+        "externalUrl": "https://leetcode.com/problems/merge-sorted-array/",
+        "statement": "Merge two sorted arrays of size m and n into a single sorted array of size m+n. (This is a stdin/stdout judge, so unlike the classic in-place version, just output the merged result -- there's no padded destination array to write into.) Input: \"m n\" on the first line, then m space-separated integers (the first array), then n space-separated integers (the second array). Output: the merged array, sorted ascending, space-separated on one line.",
+        "timeComplexity": "O(m + n)",
+        "spaceComplexity": "O(m + n)",
+        "exampleInput": "nums1 = [1,2,3], nums2 = [2,5,6]",
+        "exampleOutput": "[1,2,2,3,5,6]",
+        "constraints": [
+          "0 <= m, n <= 200",
+          "-10^9 <= values <= 10^9"
+        ],
+        "hints": [
+          "Walk both arrays with two pointers, always taking the smaller of the two current elements.",
+          "Once one array is exhausted, append the rest of the other array as-is."
+        ],
+        "editorialUrl": null,
+        "videoUrl": null,
+        "testCases": [
+          {
+            "input": "3 3\n1 2 3\n2 5 6",
+            "expectedOutput": "1 2 2 3 5 6",
+            "sample": true
+          },
+          {
+            "input": "1 1\n2\n1",
+            "expectedOutput": "1 2",
+            "sample": false
+          }
+        ]
+      },
+      {
+        "title": "Kth Smallest Number in M Sorted Lists",
+        "difficulty": "MEDIUM",
+        "tags": [
+          "Heap",
+          "K-way Merge"
+        ],
+        "externalUrl": null,
+        "statement": "Given m sorted lists of integers and an integer k, return the kth smallest number across all the lists combined (counting duplicates). Input: \"m k\" on the first line, then m lines each starting with that list's length followed by its space-separated sorted values (\"len v1 v2 ... vlen\"). Output: the kth smallest value as a single integer.",
+        "timeComplexity": "O(k log m)",
+        "spaceComplexity": "O(m)",
+        "exampleInput": "lists = [[1,3,5],[2,4,6],[0,9,10]], k = 5",
+        "exampleOutput": "4",
+        "constraints": [
+          "1 <= m <= 100",
+          "1 <= k <= sum of all list lengths"
+        ],
+        "hints": [
+          "Push the first element of every list into a min-heap, along with which list and index it came from.",
+          "Pop the smallest k times, each time pushing that list's next element (if any) back in."
+        ],
+        "editorialUrl": null,
+        "videoUrl": null,
+        "testCases": [
+          {
+            "input": "3 5\n3 1 3 5\n3 2 4 6\n3 0 9 10",
+            "expectedOutput": "4",
+            "sample": true
+          },
+          {
+            "input": "2 1\n2 5 7\n2 1 2",
+            "expectedOutput": "1",
+            "sample": false
+          }
+        ]
+      },
+      {
+        "title": "Smallest Range Covering Elements from K Lists",
+        "difficulty": "HARD",
+        "tags": [
+          "Heap",
+          "K-way Merge",
+          "Sliding Window"
+        ],
+        "externalUrl": "https://leetcode.com/problems/smallest-range-covering-elements-from-k-lists/",
+        "statement": "Given k sorted lists of integers, find the smallest range [a, b] that includes at least one number from each of the k lists. If several ranges have the same (minimal) size, output the one with the smallest starting value a. Input: \"k\" on the first line, then k lines each starting with that list's length followed by its space-separated sorted values (\"len v1 v2 ... vlen\"). Output: \"a b\" on one line.",
+        "timeComplexity": "O(n log k), n = total elements across all lists",
+        "spaceComplexity": "O(k)",
+        "exampleInput": "nums = [[4,10,15,24,26],[0,9,12,20],[5,18,22,30]]",
+        "exampleOutput": "[20,24]",
+        "constraints": [
+          "1 <= k <= 3500",
+          "each list is sorted ascending and non-empty"
+        ],
+        "hints": [
+          "Keep a pointer into each list and a min-heap of the k current pointed-at values, tracking the current max among them.",
+          "The best range ending at the current min is [current min, current max so far]; advance the pointer of whichever list contributed the min, and stop when any list runs out."
+        ],
+        "editorialUrl": null,
+        "videoUrl": null,
+        "testCases": [
+          {
+            "input": "3\n5 4 10 15 24 26\n4 0 9 12 20\n4 5 18 22 30",
+            "expectedOutput": "20 24",
+            "sample": true
+          },
+          {
+            "input": "2\n3 1 2 3\n3 1 2 3",
+            "expectedOutput": "1 1",
+            "sample": false
+          }
+        ]
+      }
+    ]
+  },
+  {
+    "name": "Subsets",
+    "problems": [
+      {
+        "title": "Letter Combinations of a Phone Number",
+        "difficulty": "MEDIUM",
+        "tags": [
+          "Backtracking",
+          "String"
+        ],
+        "externalUrl": "https://leetcode.com/problems/letter-combinations-of-a-phone-number/",
+        "statement": "Given a string of digits 2-9, return all letter combinations the digit string could represent, using the standard telephone keypad mapping (2=abc, 3=def, 4=ghi, 5=jkl, 6=mno, 7=pqrs, 8=tuv, 9=wxyz), in the order produced by trying digits left-to-right and, for each digit, its letters in the order given above. Input: the digit string on one line (may be empty, in which case there is no output at all). Output: one combination per line.",
+        "timeComplexity": "O(4^n)",
+        "spaceComplexity": "O(n)",
+        "exampleInput": "digits = \"23\"",
+        "exampleOutput": "[\"ad\",\"ae\",\"af\",\"bd\",\"be\",\"bf\",\"cd\",\"ce\",\"cf\"]",
+        "constraints": [
+          "0 <= digits.length <= 4",
+          "digits[i] is a digit in 2..9"
+        ],
+        "hints": [
+          "Recurse one digit at a time, appending each of that digit's letters before moving to the next digit."
+        ],
+        "editorialUrl": null,
+        "videoUrl": null,
+        "testCases": [
+          {
+            "input": "23",
+            "expectedOutput": "ad\nae\naf\nbd\nbe\nbf\ncd\nce\ncf",
+            "sample": true
+          },
+          {
+            "input": "9",
+            "expectedOutput": "w\nx\ny\nz",
+            "sample": false
+          }
+        ]
+      },
+      {
+        "title": "Generate Parentheses",
+        "difficulty": "MEDIUM",
+        "tags": [
+          "Backtracking",
+          "String"
+        ],
+        "externalUrl": "https://leetcode.com/problems/generate-parentheses/",
+        "statement": "Given n pairs of parentheses, generate all combinations of well-formed parentheses, in the order produced by the standard backtracking algorithm that, at each step, tries appending '(' before ')' -- appending '(' whenever open < n, and appending ')' whenever close < open. Input: n on one line. Output: one combination per line, in that order.",
+        "timeComplexity": "O(4^n / sqrt(n))",
+        "spaceComplexity": "O(n)",
+        "exampleInput": "n = 2",
+        "exampleOutput": "[\"(())\",\"()()\"]",
+        "constraints": [
+          "1 <= n <= 8"
+        ],
+        "hints": [
+          "Track how many '(' and ')' you've placed so far; only close when it wouldn't create an invalid prefix."
+        ],
+        "editorialUrl": null,
+        "videoUrl": null,
+        "testCases": [
+          {
+            "input": "2",
+            "expectedOutput": "(())\n()()",
+            "sample": true
+          },
+          {
+            "input": "3",
+            "expectedOutput": "((()))\n(()())\n(())()\n()(())\n()()()",
+            "sample": false
+          }
+        ]
+      },
+      {
+        "title": "Palindrome Partitioning",
+        "difficulty": "MEDIUM",
+        "tags": [
+          "Backtracking",
+          "String",
+          "Dynamic Programming"
+        ],
+        "externalUrl": "https://leetcode.com/problems/palindrome-partitioning/",
+        "statement": "Given a string s, return every way to partition s into a sequence of palindromic substrings, in the order produced by standard backtracking: at each position, try prefixes of increasing length (1, 2, 3, ...) that are palindromes, and recurse on the remainder. Input: s on one line. Output: one partition per line, its substrings space-separated in order.",
+        "timeComplexity": "O(n * 2^n)",
+        "spaceComplexity": "O(n)",
+        "exampleInput": "s = \"aab\"",
+        "exampleOutput": "[[\"a\",\"a\",\"b\"],[\"aa\",\"b\"]]",
+        "constraints": [
+          "1 <= s.length <= 16"
+        ],
+        "hints": [
+          "A single character is always a palindrome, so the recursion always terminates."
+        ],
+        "editorialUrl": null,
+        "videoUrl": null,
+        "testCases": [
+          {
+            "input": "aab",
+            "expectedOutput": "a a b\naa b",
+            "sample": true
+          },
+          {
+            "input": "a",
+            "expectedOutput": "a",
+            "sample": false
+          }
+        ]
+      },
+      {
+        "title": "N-Queens",
+        "difficulty": "HARD",
+        "tags": [
+          "Backtracking"
+        ],
+        "externalUrl": "https://leetcode.com/problems/n-queens/",
+        "statement": "Given n, return the number of distinct solutions to the N-Queens puzzle: placing n queens on an n x n chessboard so that no two queens attack each other (share a row, column, or diagonal). Input: n on one line. Output: the count of distinct solutions.",
+        "timeComplexity": "O(n!)",
+        "spaceComplexity": "O(n)",
+        "exampleInput": "n = 4",
+        "exampleOutput": "2",
+        "constraints": [
+          "1 <= n <= 9"
+        ],
+        "hints": [
+          "Place one queen per row; track occupied columns and both diagonals (row-col and row+col) to prune quickly."
+        ],
+        "editorialUrl": null,
+        "videoUrl": null,
+        "testCases": [
+          {
+            "input": "4",
+            "expectedOutput": "2",
+            "sample": true
+          },
+          {
+            "input": "1",
+            "expectedOutput": "1",
+            "sample": false
+          }
+        ]
+      }
+    ]
+  },
+  {
+    "name": "Modified Binary Search",
+    "problems": [
+      {
+        "title": "Order-agnostic Binary Search",
+        "difficulty": "EASY",
+        "tags": [
+          "Binary Search"
+        ],
+        "externalUrl": null,
+        "statement": "Search for a target in an array that is sorted, but the sort direction (ascending or descending) is unknown -- determine the direction first (compare the first and last elements), then binary search accordingly. Return the target's 0-indexed position, or -1 if it isn't present. Input: the array, then the target on the next line.",
+        "timeComplexity": "O(log n)",
+        "spaceComplexity": "O(1)",
+        "exampleInput": "nums = [1,3,5,7,9], target = 7",
+        "exampleOutput": "3",
+        "constraints": [
+          "1 <= nums.length <= 10^5",
+          "nums is sorted ascending or descending, no duplicates"
+        ],
+        "hints": [
+          "Once you know the direction, the rest is a normal binary search with the comparison flipped for descending order."
+        ],
+        "editorialUrl": null,
+        "videoUrl": null,
+        "testCases": [
+          {
+            "input": "1 3 5 7 9\n7",
+            "expectedOutput": "3",
+            "sample": true
+          },
+          {
+            "input": "10 8 6 4 2\n6",
+            "expectedOutput": "2",
+            "sample": false
+          }
+        ]
+      },
+      {
+        "title": "Search in Rotated Sorted Array (Patterns)",
+        "difficulty": "MEDIUM",
+        "tags": [
+          "Array",
+          "Binary Search"
+        ],
+        "externalUrl": "https://leetcode.com/problems/search-in-rotated-sorted-array/",
+        "statement": "A sorted array of distinct integers was rotated at an unknown pivot. Given a target, return its index or -1 in O(log n) time. Input: the array, then the target on the next line.",
+        "timeComplexity": "O(log n)",
+        "spaceComplexity": "O(1)",
+        "exampleInput": "nums = [4,5,6,7,0,1,2], target = 0",
+        "exampleOutput": "4",
+        "constraints": [
+          "1 <= nums.length <= 5000",
+          "All values are unique"
+        ],
+        "hints": [
+          "One half of the array (from lo to mid, or mid to hi) is always properly sorted -- check whether the target lies in that sorted half to decide which way to go."
+        ],
+        "editorialUrl": null,
+        "videoUrl": null,
+        "testCases": [
+          {
+            "input": "4 5 6 7 0 1 2\n0",
+            "expectedOutput": "4",
+            "sample": true
+          },
+          {
+            "input": "5 1 3\n1",
+            "expectedOutput": "1",
+            "sample": false
+          }
+        ]
+      },
+      {
+        "title": "Find Minimum in Rotated Sorted Array",
+        "difficulty": "MEDIUM",
+        "tags": [
+          "Array",
+          "Binary Search"
+        ],
+        "externalUrl": "https://leetcode.com/problems/find-minimum-in-rotated-sorted-array/",
+        "statement": "A sorted array of distinct integers was rotated at an unknown pivot. Return the minimum element in O(log n) time. Input: the array on one line.",
+        "timeComplexity": "O(log n)",
+        "spaceComplexity": "O(1)",
+        "exampleInput": "nums = [4,5,6,7,0,1,2]",
+        "exampleOutput": "0",
+        "constraints": [
+          "1 <= nums.length <= 5000",
+          "All values are unique"
+        ],
+        "hints": [
+          "Compare nums[mid] to nums[hi]: if nums[mid] > nums[hi], the minimum is to the right of mid; otherwise it's at or to the left of mid."
+        ],
+        "editorialUrl": null,
+        "videoUrl": null,
+        "testCases": [
+          {
+            "input": "4 5 6 7 0 1 2",
+            "expectedOutput": "0",
+            "sample": true
+          },
+          {
+            "input": "3 4 5 1 2",
+            "expectedOutput": "1",
+            "sample": false
+          }
+        ]
+      },
+      {
+        "title": "Search a 2D Matrix",
+        "difficulty": "MEDIUM",
+        "tags": [
+          "Array",
+          "Binary Search",
+          "Matrix"
+        ],
+        "externalUrl": "https://leetcode.com/problems/search-a-2d-matrix/",
+        "statement": "Given an m x n matrix where each row is sorted left-to-right and the first integer of each row is greater than the last integer of the previous row, determine if a target value exists in the matrix in O(log(m*n)) time. Input: rows and cols on the first line, then that many rows of space-separated values, then the target on the last line. Output: 'true' or 'false'.",
+        "timeComplexity": "O(log(m*n))",
+        "spaceComplexity": "O(1)",
+        "exampleInput": "matrix = [[1,3,5,7],[10,11,16,20],[23,30,34,60]], target = 3",
+        "exampleOutput": "true",
+        "constraints": [
+          "1 <= m, n <= 100"
+        ],
+        "hints": [
+          "Treat the matrix as one flattened sorted array of size m*n; convert a flat index k to (k / n, k % n)."
+        ],
+        "editorialUrl": null,
+        "videoUrl": null,
+        "testCases": [
+          {
+            "input": "3 4\n1 3 5 7\n10 11 16 20\n23 30 34 60\n3",
+            "expectedOutput": "true",
+            "sample": true
+          },
+          {
+            "input": "3 4\n1 3 5 7\n10 11 16 20\n23 30 34 60\n13",
+            "expectedOutput": "false",
+            "sample": false
+          }
+        ]
+      },
+      {
+        "title": "Find First and Last Position of Element in Sorted Array",
+        "difficulty": "MEDIUM",
+        "tags": [
+          "Array",
+          "Binary Search"
+        ],
+        "externalUrl": "https://leetcode.com/problems/find-first-and-last-position-of-element-in-sorted-array/",
+        "statement": "Given a sorted array that may contain duplicates and a target value, return the first and last index of the target, or -1 -1 if it doesn't occur, in O(log n) time. Input: the array, then the target on the next line. Output: two space-separated integers: first index and last index.",
+        "timeComplexity": "O(log n)",
+        "spaceComplexity": "O(1)",
+        "exampleInput": "nums = [5,7,7,8,8,10], target = 8",
+        "exampleOutput": "3 4",
+        "constraints": [
+          "0 <= nums.length <= 10^5"
+        ],
+        "hints": [
+          "Run binary search twice: once biased to find the leftmost occurrence, once biased to find the rightmost."
+        ],
+        "editorialUrl": null,
+        "videoUrl": null,
+        "testCases": [
+          {
+            "input": "5 7 7 8 8 10\n8",
+            "expectedOutput": "3 4",
+            "sample": true
+          },
+          {
+            "input": "5 7 7 8 8 10\n6",
+            "expectedOutput": "-1 -1",
+            "sample": false
+          }
+        ]
+      }
+    ]
+  },
+  {
+    "name": "Bitwise XOR",
+    "problems": [
+      {
+        "title": "Single Number",
+        "difficulty": "EASY",
+        "tags": [
+          "Bit Manipulation",
+          "Array"
+        ],
+        "externalUrl": "https://leetcode.com/problems/single-number/",
+        "statement": "Given a non-empty array where every element appears exactly twice except for one which appears exactly once, find that single element in O(n) time and O(1) extra space. Input: the array on one line.",
+        "timeComplexity": "O(n)",
+        "spaceComplexity": "O(1)",
+        "exampleInput": "nums = [4,1,2,1,2]",
+        "exampleOutput": "4",
+        "constraints": [
+          "1 <= nums.length <= 3*10^4"
+        ],
+        "hints": [
+          "XOR every element together -- pairs cancel out (x ^ x = 0), leaving only the single value."
+        ],
+        "editorialUrl": null,
+        "videoUrl": null,
+        "testCases": [
+          {
+            "input": "4 1 2 1 2",
+            "expectedOutput": "4",
+            "sample": true
+          },
+          {
+            "input": "1",
+            "expectedOutput": "1",
+            "sample": false
+          }
+        ]
+      },
+      {
+        "title": "Single Number II",
+        "difficulty": "MEDIUM",
+        "tags": [
+          "Bit Manipulation",
+          "Array"
+        ],
+        "externalUrl": "https://leetcode.com/problems/single-number-ii/",
+        "statement": "Given an array where every element appears exactly three times except for one which appears exactly once, find that single element in O(n) time and O(1) extra space. Input: the array on one line.",
+        "timeComplexity": "O(n)",
+        "spaceComplexity": "O(1)",
+        "exampleInput": "nums = [2,2,3,2]",
+        "exampleOutput": "3",
+        "constraints": [
+          "1 <= nums.length <= 3*10^4"
+        ],
+        "hints": [
+          "For each of the 32 bit positions, sum that bit across every number and take the sum mod 3 -- the remainder is that bit of the answer."
+        ],
+        "editorialUrl": null,
+        "videoUrl": null,
+        "testCases": [
+          {
+            "input": "2 2 3 2",
+            "expectedOutput": "3",
+            "sample": true
+          },
+          {
+            "input": "0 1 0 1 0 1 99",
+            "expectedOutput": "99",
+            "sample": false
+          }
+        ]
+      },
+      {
+        "title": "Complement of Base 10 Number",
+        "difficulty": "EASY",
+        "tags": [
+          "Bit Manipulation"
+        ],
+        "externalUrl": "https://leetcode.com/problems/complement-of-base-10-integer/",
+        "statement": "Given a positive integer num, return the complement of its binary representation: flip every bit within its minimal-length binary form (i.e. no leading zeros are considered part of the number). Input: num on one line.",
+        "timeComplexity": "O(log num)",
+        "spaceComplexity": "O(1)",
+        "exampleInput": "num = 5",
+        "exampleOutput": "2",
+        "constraints": [
+          "0 <= num <= 10^9"
+        ],
+        "hints": [
+          "Build a mask of all-1-bits the same bit-length as num (e.g. the next power of two minus one that's >= num), then XOR num with that mask."
+        ],
+        "editorialUrl": null,
+        "videoUrl": null,
+        "testCases": [
+          {
+            "input": "5",
+            "expectedOutput": "2",
+            "sample": true
+          },
+          {
+            "input": "1",
+            "expectedOutput": "0",
+            "sample": false
+          }
+        ]
+      },
+      {
+        "title": "Flip and Invert an Image",
+        "difficulty": "EASY",
+        "tags": [
+          "Bit Manipulation",
+          "Array",
+          "Matrix"
+        ],
+        "externalUrl": "https://leetcode.com/problems/flipping-an-image/",
+        "statement": "Given a binary matrix, flip each row horizontally (reverse the row), then invert each bit (0 becomes 1, 1 becomes 0). Return the resulting matrix. Input: rows and cols on the first line, then that many rows of space-separated 0/1 values. Output: the resulting matrix in the same format.",
+        "timeComplexity": "O(rows * cols)",
+        "spaceComplexity": "O(1) extra",
+        "exampleInput": "image = [[1,1,0],[1,0,1],[0,0,0]]",
+        "exampleOutput": "[[1,0,0],[0,1,0],[1,1,1]]",
+        "constraints": [
+          "1 <= rows, cols <= 20",
+          "values are 0 or 1"
+        ],
+        "hints": [
+          "Flipping then inverting a row is the same as reversing the row and swapping every 0/1 -- you can do both in one pass with two pointers."
+        ],
+        "editorialUrl": null,
+        "videoUrl": null,
+        "testCases": [
+          {
+            "input": "3 3\n1 1 0\n1 0 1\n0 0 0",
+            "expectedOutput": "1 0 0\n0 1 0\n1 1 1",
+            "sample": true
+          },
+          {
+            "input": "1 2\n1 0",
+            "expectedOutput": "1 0",
+            "sample": false
+          }
+        ]
+      }
+    ]
+  },
+  {
+    "name": "0/1 Knapsack",
+    "problems": [
+      {
+        "title": "0/1 Knapsack",
+        "difficulty": "MEDIUM",
+        "tags": [
+          "Dynamic Programming",
+          "0/1 Knapsack"
+        ],
+        "externalUrl": null,
+        "statement": "Given n items, each with a weight and a value, and a knapsack of capacity W, find the maximum total value you can carry without exceeding the capacity. Each item can be used at most once. Input: n and W on the first line, then a line of n space-separated weights, then a line of n space-separated values. Output: the maximum achievable value.",
+        "timeComplexity": "O(n * W)",
+        "spaceComplexity": "O(n * W)",
+        "exampleInput": "weights = [1,3,4,5], values = [1,4,5,7], W = 7",
+        "exampleOutput": "9",
+        "constraints": [
+          "1 <= n <= 500",
+          "0 <= W <= 10000"
+        ],
+        "hints": [
+          "Let dp[i][w] be the best value using the first i items with capacity w.",
+          "For each item, either skip it (dp[i-1][w]) or take it if it fits (value[i] + dp[i-1][w-weight[i]]) -- take the better of the two."
+        ],
+        "testCases": [
+          {
+            "input": "4 7\n1 3 4 5\n1 4 5 7",
+            "expectedOutput": "9",
+            "sample": true
+          },
+          {
+            "input": "3 4\n4 5 1\n5 6 3",
+            "expectedOutput": "5",
+            "sample": false
+          }
+        ]
+      },
+      {
+        "title": "Equal Subset Sum Partition",
+        "difficulty": "MEDIUM",
+        "tags": [
+          "Dynamic Programming",
+          "0/1 Knapsack"
+        ],
+        "externalUrl": null,
+        "statement": "Given an array of positive integers, determine whether it can be partitioned into two subsets with equal sum. Input: n on the first line, then n space-separated integers. Output: \"true\" or \"false\".",
+        "timeComplexity": "O(n * sum)",
+        "spaceComplexity": "O(sum)",
+        "exampleInput": "nums = [1,5,11,5]",
+        "exampleOutput": "true",
+        "constraints": [
+          "1 <= n <= 200",
+          "1 <= nums[i] <= 100"
+        ],
+        "hints": [
+          "If the total sum is odd, an equal split is impossible.",
+          "Otherwise this is exactly Subset Sum with target = total / 2."
+        ],
+        "testCases": [
+          {
+            "input": "4\n1 5 11 5",
+            "expectedOutput": "true",
+            "sample": true
+          },
+          {
+            "input": "4\n1 2 3 5",
+            "expectedOutput": "false",
+            "sample": false
+          }
+        ]
+      },
+      {
+        "title": "Subset Sum",
+        "difficulty": "MEDIUM",
+        "tags": [
+          "Dynamic Programming",
+          "0/1 Knapsack"
+        ],
+        "externalUrl": null,
+        "statement": "Given an array of non-negative integers and a target sum, determine whether any subset of the array sums exactly to the target. Input: n and target on the first line, then n space-separated integers. Output: \"true\" or \"false\".",
+        "timeComplexity": "O(n * target)",
+        "spaceComplexity": "O(target)",
+        "exampleInput": "nums = [3,34,4,12,5,2], target = 9",
+        "exampleOutput": "true",
+        "constraints": [
+          "1 <= n <= 200",
+          "0 <= target <= 10000"
+        ],
+        "hints": [
+          "Let dp[w] be true if some subset of the items processed so far sums to w.",
+          "Process items one at a time, updating dp from high w down to low w so each item is used at most once."
+        ],
+        "testCases": [
+          {
+            "input": "6 9\n3 34 4 12 5 2",
+            "expectedOutput": "true",
+            "sample": true
+          },
+          {
+            "input": "3 4\n1 2 5",
+            "expectedOutput": "false",
+            "sample": false
+          }
+        ]
+      },
+      {
+        "title": "Minimum Subset Sum Difference",
+        "difficulty": "HARD",
+        "tags": [
+          "Dynamic Programming",
+          "0/1 Knapsack"
+        ],
+        "externalUrl": null,
+        "statement": "Given an array of positive integers, partition it into two subsets so that the absolute difference between their sums is minimized. Input: n on the first line, then n space-separated integers. Output: the minimum possible difference.",
+        "timeComplexity": "O(n * sum)",
+        "spaceComplexity": "O(sum)",
+        "exampleInput": "nums = [1,6,11,5]",
+        "exampleOutput": "1",
+        "constraints": [
+          "1 <= n <= 200",
+          "1 <= nums[i] <= 1000"
+        ],
+        "hints": [
+          "Find every subset sum reachable up to total/2 (via the Subset Sum DP), then the best split uses the reachable sum closest to total/2.",
+          "The answer is total - 2 * (largest reachable sum <= total / 2)."
+        ],
+        "testCases": [
+          {
+            "input": "4\n1 6 11 5",
+            "expectedOutput": "1",
+            "sample": true
+          },
+          {
+            "input": "4\n1 2 3 9",
+            "expectedOutput": "3",
+            "sample": false
+          }
+        ]
+      },
+      {
+        "title": "Target Sum",
+        "difficulty": "MEDIUM",
+        "tags": [
+          "Dynamic Programming",
+          "0/1 Knapsack"
+        ],
+        "externalUrl": null,
+        "statement": "Given an array of non-negative integers and an integer target, count how many ways you can assign a '+' or '-' sign to each number so that the resulting sum equals target. Two assignments are different if the sign of any position differs, even if the resulting expression evaluates the same way (e.g. a 0 can be '+0' or '-0', counted separately). Input: n and target on the first line, then n space-separated integers. Output: the number of ways.",
+        "timeComplexity": "O(n * sum)",
+        "spaceComplexity": "O(sum)",
+        "exampleInput": "nums = [1,1,1,1,1], target = 3",
+        "exampleOutput": "5",
+        "constraints": [
+          "1 <= n <= 20",
+          "0 <= nums[i] <= 1000"
+        ],
+        "hints": [
+          "If P is the set of numbers given '+' and N the set given '-', then sum(P) - sum(N) = target and sum(P) + sum(N) = totalSum.",
+          "Solving gives sum(P) = (totalSum + target) / 2 -- so this reduces to Count of Subset Sum with that target (if it isn't a non-negative integer, the answer is 0)."
+        ],
+        "testCases": [
+          {
+            "input": "5 3\n1 1 1 1 1",
+            "expectedOutput": "5",
+            "sample": true
+          },
+          {
+            "input": "2 1\n1 0",
+            "expectedOutput": "2",
+            "sample": false
+          }
+        ]
+      },
+      {
+        "title": "Count of Subset Sum",
+        "difficulty": "MEDIUM",
+        "tags": [
+          "Dynamic Programming",
+          "0/1 Knapsack"
+        ],
+        "externalUrl": null,
+        "statement": "Given an array of non-negative integers and a target sum, count how many distinct subsets (by index, not by value) sum exactly to the target. Input: n and target on the first line, then n space-separated integers. Output: the number of subsets.",
+        "timeComplexity": "O(n * target)",
+        "spaceComplexity": "O(target)",
+        "exampleInput": "nums = [1,2,3,3], target = 6",
+        "exampleOutput": "3",
+        "constraints": [
+          "1 <= n <= 100",
+          "0 <= target <= 5000"
+        ],
+        "hints": [
+          "Let dp[w] be the number of ways to reach sum w using the items processed so far.",
+          "Process items one at a time, updating dp from high w down to low w (dp[w] += dp[w - item]) so each item is counted at most once per subset."
+        ],
+        "testCases": [
+          {
+            "input": "4 6\n1 2 3 3",
+            "expectedOutput": "3",
+            "sample": true
+          },
+          {
+            "input": "2 1\n1 1",
+            "expectedOutput": "2",
+            "sample": false
+          }
+        ]
+      }
+    ]
+  },
+  {
+    "name": "Topological Sort",
+    "problems": [
+      {
+        "title": "Topological Sort",
+        "difficulty": "MEDIUM",
+        "tags": [
+          "Graph",
+          "Topological Sort",
+          "BFS"
+        ],
+        "externalUrl": null,
+        "statement": "Given a directed acyclic graph with n nodes (0-indexed) and directed edges, output one valid topological order using Kahn's algorithm with this tie-break: among all nodes currently available (in-degree 0 and not yet output), always output the smallest-numbered one next. Input: n and m on the first line, then m lines of \"u v\" meaning a directed edge u -> v. Output: the topological order, space-separated.",
+        "timeComplexity": "O(V + E)",
+        "spaceComplexity": "O(V + E)",
+        "exampleInput": "n = 6, edges = [[5,2],[5,0],[4,0],[4,1],[2,3],[3,1]]",
+        "exampleOutput": "4 5 0 2 3 1",
+        "constraints": [
+          "1 <= n <= 2000",
+          "the graph is guaranteed acyclic"
+        ],
+        "hints": [
+          "Compute in-degree for every node, then repeatedly pick the smallest-numbered node with in-degree 0, output it, and decrement its neighbors' in-degrees.",
+          "A min-heap (or a sorted scan) over the currently-available set gives the required smallest-first tie-break."
+        ],
+        "testCases": [
+          {
+            "input": "6 6\n5 2\n5 0\n4 0\n4 1\n2 3\n3 1",
+            "expectedOutput": "4 5 0 2 3 1",
+            "sample": true
+          },
+          {
+            "input": "3 2\n0 1\n1 2",
+            "expectedOutput": "0 1 2",
+            "sample": false
+          }
+        ]
+      },
+      {
+        "title": "Course Schedule II",
+        "difficulty": "MEDIUM",
+        "tags": [
+          "Graph",
+          "Topological Sort",
+          "BFS"
+        ],
+        "externalUrl": "https://leetcode.com/problems/course-schedule-ii/",
+        "statement": "Given numCourses and prerequisite pairs [a, b] (take b before a), return a valid order to take all courses, or a single \"-1\" if it's impossible (a cycle exists). Use Kahn's algorithm with this tie-break: among all courses currently available (no remaining prerequisites), always take the smallest-numbered one next. Input: numCourses and the number of prerequisite pairs on the first line, then each pair \"a b\" on its own line. Output: the course order, space-separated, or \"-1\".",
+        "timeComplexity": "O(V + E)",
+        "spaceComplexity": "O(V + E)",
+        "exampleInput": "numCourses = 4, prerequisites = [[1,0],[2,0],[3,1],[3,2]]",
+        "exampleOutput": "0 1 2 3",
+        "constraints": [
+          "1 <= numCourses <= 2000"
+        ],
+        "hints": [
+          "Model each pair [a, b] as a directed edge b -> a (b must come before a).",
+          "Run Kahn's algorithm; if fewer than numCourses nodes get output, there's a cycle -- print -1."
+        ],
+        "testCases": [
+          {
+            "input": "4 4\n1 0\n2 0\n3 1\n3 2",
+            "expectedOutput": "0 1 2 3",
+            "sample": true
+          },
+          {
+            "input": "2 2\n1 0\n0 1",
+            "expectedOutput": "-1",
+            "sample": false
+          }
+        ]
+      },
+      {
+        "title": "Alien Dictionary",
+        "difficulty": "HARD",
+        "tags": [
+          "Graph",
+          "Topological Sort"
+        ],
+        "externalUrl": "https://leetcode.com/problems/alien-dictionary/",
+        "statement": "You're given a list of words from an alien language's dictionary, sorted lexicographically by that language's unknown alphabet (using lowercase English letters). Derive one valid ordering of the letters that appear, using Kahn's algorithm with this tie-break: among letters currently available (no remaining constraints), always output the alphabetically-smallest one next. If the input is contradictory (a cycle), or a word appears before a proper prefix of itself (which can never happen in a validly sorted dictionary), output \"invalid\". Input: k on the first line, then k words, one per line. Output: the derived letter ordering as a single string with no spaces, or \"invalid\".",
+        "timeComplexity": "O(C)",
+        "spaceComplexity": "O(1) (bounded by the 26-letter alphabet)",
+        "exampleInput": "words = [\"wrt\",\"wrf\",\"er\",\"ett\",\"rftt\"]",
+        "exampleOutput": "wertf",
+        "constraints": [
+          "1 <= k <= 100",
+          "1 <= word length <= 100"
+        ],
+        "hints": [
+          "Compare each pair of adjacent words to find the first differing letter -- that gives one ordering edge (earlier letter -> later letter). If no letters differ and the earlier word is longer, the input is invalid.",
+          "Include every distinct letter across all words as a node (even ones with no edges), then run Kahn's algorithm with the alphabetically-smallest-first tie-break."
+        ],
+        "testCases": [
+          {
+            "input": "5\nwrt\nwrf\ner\nett\nrftt",
+            "expectedOutput": "wertf",
+            "sample": true
+          },
+          {
+            "input": "2\nabc\nab",
+            "expectedOutput": "invalid",
+            "sample": false
+          }
+        ]
+      },
+      {
+        "title": "Minimum Height Trees",
+        "difficulty": "MEDIUM",
+        "tags": [
+          "Graph",
+          "Topological Sort",
+          "BFS"
+        ],
+        "externalUrl": "https://leetcode.com/problems/minimum-height-trees/",
+        "statement": "Given n nodes (0-indexed) forming an unrooted tree via n-1 undirected edges, find every node that, if chosen as the root, minimizes the tree's height. Input: n and m on the first line (m = number of edges), then m lines of \"u v\". Output: the roots that minimize height, sorted ascending, space-separated.",
+        "timeComplexity": "O(n)",
+        "spaceComplexity": "O(n)",
+        "exampleInput": "n = 4, edges = [[1,0],[1,2],[1,3]]",
+        "exampleOutput": "1",
+        "constraints": [
+          "1 <= n <= 20000",
+          "the edges always form a valid tree"
+        ],
+        "hints": [
+          "The minimum-height root(s) are always the tree's centroid(s) -- there are at most two.",
+          "Repeatedly strip away all current leaf nodes (degree 1) layer by layer, like peeling an onion; the last 1 or 2 nodes remaining are the answer."
+        ],
+        "testCases": [
+          {
+            "input": "4 3\n1 0\n1 2\n1 3",
+            "expectedOutput": "1",
+            "sample": true
+          },
+          {
+            "input": "6 5\n3 0\n3 1\n3 2\n3 4\n5 4",
+            "expectedOutput": "3 4",
+            "sample": false
+          }
+        ]
+      }
+    ]
+  }
+]
