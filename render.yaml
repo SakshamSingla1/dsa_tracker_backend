@@ -1,0 +1,43 @@
+databases:
+  - name: dsa-tracker-db
+    plan: free
+    region: oregon
+    postgresMajorVersion: "16"
+
+services:
+  - type: web
+    name: dsa-tracker-api
+    runtime: docker
+    dockerfilePath: ./Dockerfile
+    dockerContext: .
+    plan: free
+    region: oregon
+    healthCheckPath: /actuator/health
+    envVars:
+      - key: DB_HOST
+        fromDatabase:
+          name: dsa-tracker-db
+          property: host
+      - key: DB_PORT
+        fromDatabase:
+          name: dsa-tracker-db
+          property: port
+      - key: DB_NAME
+        fromDatabase:
+          name: dsa-tracker-db
+          property: database
+      - key: DATABASE_USER
+        fromDatabase:
+          name: dsa-tracker-db
+          property: user
+      - key: DATABASE_PASSWORD
+        fromDatabase:
+          name: dsa-tracker-db
+          property: password
+      - key: JWT_SECRET
+        generateValue: true
+      # Set this to your deployed frontend's URL once you have it
+      # (e.g. https://dsa-tracker.vercel.app) -- update in the Render dashboard,
+      # no redeploy of the Blueprint needed.
+      - key: CORS_ALLOWED_ORIGINS
+        value: http://localhost:5173
