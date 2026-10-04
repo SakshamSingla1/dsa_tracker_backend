@@ -9,8 +9,13 @@ COPY src src
 RUN ./mvnw -B package -DskipTests
 
 # ---- Run stage ----
-FROM eclipse-temurin:17-jre
+# Needs the full JDK (javac, not just the JRE) plus g++/python3/node -- CodeRunnerService
+# shells out to all four to compile/run user submissions in Java, C++, Python, and JavaScript.
+FROM eclipse-temurin:17-jdk
 WORKDIR /app
+RUN apt-get update \
+    && apt-get install -y --no-install-recommends g++ python3 nodejs \
+    && rm -rf /var/lib/apt/lists/*
 COPY --from=build /app/target/*.jar app.jar
 EXPOSE 8081
 ENTRYPOINT ["java", "-jar", "app.jar"]
