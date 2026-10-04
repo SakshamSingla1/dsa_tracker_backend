@@ -112,6 +112,8 @@ public class DataSeeder implements CommandLineRunner {
      *       (appended after whatever sheets already exist);</li>
      *   <li>a topic in an existing sheet's JSON that doesn't exist yet in the DB is fully
      *       seeded (appended after that sheet's existing topics);</li>
+     *   <li>a problem in an existing topic's JSON that doesn't exist yet in the DB is fully
+     *       seeded (appended after that topic's existing problems);</li>
      *   <li>a problem that already exists but currently has zero test cases gets them
      *       backfilled (and its statement refreshed, in case it grew an "Input: ..." line
      *       documenting the format those new test cases rely on) if the JSON now provides some.</li>
@@ -164,10 +166,18 @@ public class DataSeeder implements CommandLineRunner {
 
                 Map<String, Problem> problemsByTitle = topic.getProblems().stream()
                         .collect(Collectors.toMap(Problem::getTitle, Function.identity(), (a, b) -> a));
+                int nextProblemOrder = topic.getProblems().size();
 
                 for (SeedProblem seedProblem : seedTopic.problems()) {
                     Problem problem = problemsByTitle.get(seedProblem.title());
-                    if (problem == null || !problem.getTestCases().isEmpty()) {
+
+                    if (problem == null) {
+                        // A whole new problem added to this existing topic since the initial seed.
+                        topic.getProblems().add(buildProblem(seedProblem, topic, nextProblemOrder++));
+                        continue;
+                    }
+
+                    if (!problem.getTestCases().isEmpty()) {
                         continue;
                     }
                     if (seedProblem.testCases() == null || seedProblem.testCases().isEmpty()) {

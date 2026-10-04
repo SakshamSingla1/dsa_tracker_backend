@@ -814,6 +814,132 @@
             "sample": false
           }
         ]
+      },
+      {
+        "title": "Print Solid Rhombus",
+        "difficulty": "EASY",
+        "tags": [
+          "pattern",
+          "loops"
+        ],
+        "externalUrl": null,
+        "statement": "Print a rhombus made of stars, leaning to the right. Row i (1-indexed, i from 1 to n) has (i - 1) leading spaces, followed by n stars with no spaces between them. Input: a single integer n (1 <= n <= 9). Output: the pattern for that n, one row per line, using exactly the spacing described above -- no trailing spaces on any line.",
+        "timeComplexity": "O(n^2)",
+        "spaceComplexity": "O(1) extra (O(n) for the printed output itself)",
+        "exampleInput": "n = 4",
+        "exampleOutput": "****\n ****\n  ****\n   ****",
+        "examples": [
+          {
+            "input": "n = 4",
+            "output": "****\n ****\n  ****\n   ****",
+            "explanation": null
+          }
+        ],
+        "constraints": [
+          "1 <= n <= 9"
+        ],
+        "hints": [
+          "Every row has exactly n stars -- only the number of leading spaces changes from row to row.",
+          "Row i needs (i - 1) leading spaces before the n stars."
+        ],
+        "editorialUrl": null,
+        "videoUrl": null,
+        "testCases": [
+          {
+            "input": "4",
+            "expectedOutput": "****\n ****\n  ****\n   ****",
+            "sample": true
+          },
+          {
+            "input": "3",
+            "expectedOutput": "***\n ***\n  ***",
+            "sample": false
+          }
+        ]
+      },
+      {
+        "title": "Print Hollow Rhombus",
+        "difficulty": "MEDIUM",
+        "tags": [
+          "pattern",
+          "loops"
+        ],
+        "externalUrl": null,
+        "statement": "Print the solid rhombus, but hollow on the inside. Row i (1-indexed) has (i - 1) leading spaces. The first and last rows (i = 1 or i = n) are then n stars with no spaces; every row in between is a star, (n - 2) plain spaces, then a star. Input: a single integer n (1 <= n <= 9). Output: the pattern for that n, one row per line, using exactly the spacing described above -- no trailing spaces on any line.",
+        "timeComplexity": "O(n^2)",
+        "spaceComplexity": "O(1) extra (O(n) for the printed output itself)",
+        "exampleInput": "n = 4",
+        "exampleOutput": "****\n *  *\n  *  *\n   ****",
+        "examples": [
+          {
+            "input": "n = 4",
+            "output": "****\n *  *\n  *  *\n   ****",
+            "explanation": null
+          }
+        ],
+        "constraints": [
+          "1 <= n <= 9"
+        ],
+        "hints": [
+          "This is the solid rhombus with the same leading-space formula -- only the row content changes.",
+          "The first and last rows stay solid; every row between them is just a star, (n - 2) spaces, and a star."
+        ],
+        "editorialUrl": null,
+        "videoUrl": null,
+        "testCases": [
+          {
+            "input": "4",
+            "expectedOutput": "****\n *  *\n  *  *\n   ****",
+            "sample": true
+          },
+          {
+            "input": "3",
+            "expectedOutput": "***\n * *\n  ***",
+            "sample": false
+          }
+        ]
+      },
+      {
+        "title": "Print X Pattern",
+        "difficulty": "MEDIUM",
+        "tags": [
+          "pattern",
+          "loops"
+        ],
+        "externalUrl": null,
+        "statement": "Print an X made of stars inside an n x n grid. Row i (0-indexed, i from 0 to n-1) has a star at column i and at column (n - 1 - i); every other column in that row is a space. Trim any trailing spaces from a row before printing it (the two star columns coincide in the middle row for odd n, and several rows end short of the full width once trimmed). Input: a single integer n (1 <= n <= 9). Output: the pattern for that n, one row per line.",
+        "timeComplexity": "O(n^2)",
+        "spaceComplexity": "O(1) extra (O(n) for the printed output itself)",
+        "exampleInput": "n = 4",
+        "exampleOutput": "*  *\n **\n **\n*  *",
+        "examples": [
+          {
+            "input": "n = 4",
+            "output": "*  *\n **\n **\n*  *",
+            "explanation": null
+          }
+        ],
+        "constraints": [
+          "1 <= n <= 9"
+        ],
+        "hints": [
+          "A star belongs at column i and at column (n - 1 - i) for row i -- everywhere else in that row is a space.",
+          "Build the full-width row first, then strip its trailing spaces before printing."
+        ],
+        "editorialUrl": null,
+        "videoUrl": null,
+        "testCases": [
+          {
+            "input": "4",
+            "expectedOutput": "*  *\n **\n **\n*  *",
+            "sample": true
+          },
+          {
+            "input": "3",
+            "expectedOutput": "* *\n *\n* *",
+            "sample": false
+          }
+        ]
       }
     ]
   },
