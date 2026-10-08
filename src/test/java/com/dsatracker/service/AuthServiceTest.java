@@ -42,6 +42,8 @@ class AuthServiceTest {
     // Real BCrypt, not mocked -- change/delete-password tests need genuine
     // encode/matches behavior, not a stubbed always-true/false.
     private final PasswordEncoder passwordEncoder = new BCryptPasswordEncoder();
+    // Real XpService, not mocked -- it's pure math with no dependencies of its own.
+    private final XpService xpService = new XpService();
 
     private AuthService authService;
 
@@ -49,7 +51,8 @@ class AuthServiceTest {
     void setUp() {
         authService = new AuthService(
                 userRepository, passwordEncoder, jwtService,
-                contestProblemRepository, contestSessionRepository, submissionRepository, userProgressRepository
+                contestProblemRepository, contestSessionRepository, submissionRepository, userProgressRepository,
+                xpService
         );
     }
 

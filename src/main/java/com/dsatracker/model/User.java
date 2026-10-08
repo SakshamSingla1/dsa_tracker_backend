@@ -30,6 +30,13 @@ public class User {
     @Column(length = 280)
     private String bio;
 
+    /** Cumulative XP earned from first-time ACCEPTED submissions. Level is derived from this, never stored.
+     *  columnDefinition carries an explicit DEFAULT so Hibernate's ddl-auto=update ALTER TABLE can backfill
+     *  this NOT NULL column on an existing table that already has rows (plain `nullable=false` has no
+     *  default, and Postgres rejects adding a NOT NULL column with no way to fill existing rows). */
+    @Column(nullable = false, columnDefinition = "bigint not null default 0")
+    private long xp = 0;
+
     @Column(nullable = false)
     private Instant createdAt = Instant.now();
 
@@ -71,6 +78,14 @@ public class User {
 
     public void setBio(String bio) {
         this.bio = bio;
+    }
+
+    public long getXp() {
+        return xp;
+    }
+
+    public void setXp(long xp) {
+        this.xp = xp;
     }
 
     public Instant getCreatedAt() {

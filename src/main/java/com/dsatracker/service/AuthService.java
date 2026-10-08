@@ -30,6 +30,7 @@ public class AuthService {
     private final ContestSessionRepository contestSessionRepository;
     private final SubmissionRepository submissionRepository;
     private final UserProgressRepository userProgressRepository;
+    private final XpService xpService;
 
     public AuthService(
             UserRepository userRepository,
@@ -38,7 +39,8 @@ public class AuthService {
             ContestProblemRepository contestProblemRepository,
             ContestSessionRepository contestSessionRepository,
             SubmissionRepository submissionRepository,
-            UserProgressRepository userProgressRepository
+            UserProgressRepository userProgressRepository,
+            XpService xpService
     ) {
         this.userRepository = userRepository;
         this.passwordEncoder = passwordEncoder;
@@ -47,6 +49,7 @@ public class AuthService {
         this.contestSessionRepository = contestSessionRepository;
         this.submissionRepository = submissionRepository;
         this.userProgressRepository = userProgressRepository;
+        this.xpService = xpService;
     }
 
     public AuthResponse register(RegisterRequest request) {
@@ -140,7 +143,12 @@ public class AuthService {
     }
 
     private ProfileResponse toProfileResponse(User user) {
-        return new ProfileResponse(user.getId(), user.getEmail(), user.getDisplayName(), user.getBio(), user.getCreatedAt());
+        long xp = user.getXp();
+        return new ProfileResponse(
+                user.getId(), user.getEmail(), user.getDisplayName(), user.getBio(),
+                xp, xpService.levelForXp(xp), xpService.xpIntoCurrentLevel(xp), xpService.xpForNextLevel(xp),
+                user.getCreatedAt()
+        );
     }
 
     private String normalizeEmail(String email) {

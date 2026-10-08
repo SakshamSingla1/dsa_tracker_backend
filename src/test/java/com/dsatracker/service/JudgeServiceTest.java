@@ -10,6 +10,7 @@ import com.dsatracker.model.Verdict;
 import com.dsatracker.repository.ProblemRepository;
 import com.dsatracker.repository.SubmissionRepository;
 import com.dsatracker.repository.UserProgressRepository;
+import com.dsatracker.repository.UserRepository;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
@@ -40,12 +41,18 @@ class JudgeServiceTest {
     @Mock SubmissionRepository submissionRepository;
     @Mock UserProgressRepository userProgressRepository;
     @Mock ContestService contestService;
+    @Mock UserRepository userRepository;
+    @Mock XpService xpService;
+    private final ComplexityAnalyzerService complexityAnalyzerService = new ComplexityAnalyzerService();
 
     private JudgeService judgeService;
 
     @BeforeEach
     void setUp() {
-        judgeService = new JudgeService(problemRepository, codeRunnerService, submissionRepository, userProgressRepository, contestService);
+        judgeService = new JudgeService(
+                problemRepository, codeRunnerService, submissionRepository, userProgressRepository,
+                contestService, userRepository, xpService, complexityAnalyzerService
+        );
     }
 
     private Problem problemWithOneSample(String input, String expectedOutput) {

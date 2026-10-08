@@ -28,3 +28,9 @@ services:
       # sync: false so dashboard edits survive future git-triggered blueprint syncs.
       - key: CORS_ALLOWED_ORIGINS
         sync: false
+      # Free-tier key from https://aistudio.google.com -- powers AI hints, AI code review,
+      # and the AI-assisted parts of the recommendations feature. Optional: every AI feature
+      # degrades gracefully (falls back to non-AI behavior) when this is unset, so the app
+      # deploys and runs fine without it -- only set this once you actually want AI live.
+      - key: GEMINI_API_KEY
+        sync: false

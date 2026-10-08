@@ -1,5 +1,6 @@
 package com.dsatracker.service;
 
+import com.dsatracker.dto.ComplexityEstimateResponse;
 import com.dsatracker.dto.JudgeRequest;
 import com.dsatracker.dto.JudgeResponse;
 import com.dsatracker.dto.TestCaseResult;
@@ -13,6 +14,7 @@ import com.dsatracker.model.Verdict;
 import com.dsatracker.repository.ProblemRepository;
 import com.dsatracker.repository.SubmissionRepository;
 import com.dsatracker.repository.UserProgressRepository;
+import com.dsatracker.repository.UserRepository;
 import org.springframework.http.HttpStatus;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
@@ -36,19 +38,28 @@ public class JudgeService {
     private final SubmissionRepository submissionRepository;
     private final UserProgressRepository userProgressRepository;
     private final ContestService contestService;
+    private final UserRepository userRepository;
+    private final XpService xpService;
+    private final ComplexityAnalyzerService complexityAnalyzerService;
 
     public JudgeService(
             ProblemRepository problemRepository,
             CodeRunnerService codeRunnerService,
             SubmissionRepository submissionRepository,
             UserProgressRepository userProgressRepository,
-            ContestService contestService
+            ContestService contestService,
+            UserRepository userRepository,
+            XpService xpService,
+            ComplexityAnalyzerService complexityAnalyzerService
     ) {
         this.problemRepository = problemRepository;
         this.codeRunnerService = codeRunnerService;
         this.submissionRepository = submissionRepository;
         this.userProgressRepository = userProgressRepository;
         this.contestService = contestService;
+        this.userRepository = userRepository;
+        this.xpService = xpService;
+        this.complexityAnalyzerService = complexityAnalyzerService;
     }
 
     @Transactional(readOnly = true)
@@ -75,6 +86,7 @@ public class JudgeService {
         submission.setRuntimeMs(result.durationMs());
         submission = submissionRepository.save(submission);
 
+        Long xpAwarded = null;
         if (result.verdict() == Verdict.ACCEPTED) {
             UserProgress progress = userProgressRepository.findByUserIdAndProblemId(user.getId(), problemId)
                     .orElseGet(() -> {
@@ -83,21 +95,37 @@ public class JudgeService {
                         p.setProblem(problem);
                         return p;
                     });
-            if (progress.getStatus() != Status.DONE) {
+            boolean firstTimeDone = progress.getStatus() != Status.DONE;
+            if (firstTimeDone) {
                 progress.setCompletedAt(LocalDate.now());
             }
             progress.setStatus(Status.DONE);
             userProgressRepository.save(progress);
+
+            if (firstTimeDone) {
+                long gain = xpService.xpForDifficulty(problem.getDifficulty());
+                user.setXp(user.getXp() + gain);
+                userRepository.save(user);
+                xpAwarded = gain;
+            }
 
             if (request.contestSessionId() != null) {
                 contestService.markSolvedIfActive(user, problemId);
             }
         }
 
+        ComplexityEstimateResponse complexity = result.verdict() == Verdict.COMPILE_ERROR
+                ? null
+                : toComplexityResponse(complexityAnalyzerService.analyze(request.code()));
+
         return new JudgeResponse(
                 result.verdict(), result.compileError(), result.passedCount(), result.totalCount(),
-                result.durationMs(), result.results(), submission.getId()
+                result.durationMs(), result.results(), submission.getId(), xpAwarded, complexity
         );
+    }
+
+    private ComplexityEstimateResponse toComplexityResponse(ComplexityAnalyzerService.Result r) {
+        return new ComplexityEstimateResponse(r.maxLoopDepth(), r.likelyRecursive(), r.estimate());
     }
 
     private JudgeResponse judge(Problem problem, JudgeRequest request, List<TestCase> cases) {
@@ -112,7 +140,7 @@ public class JudgeService {
         long duration = System.currentTimeMillis() - start;
 
         if (!batch.compiled()) {
-            return new JudgeResponse(Verdict.COMPILE_ERROR, batch.compileError(), 0, cases.size(), duration, List.of(), null);
+            return new JudgeResponse(Verdict.COMPILE_ERROR, batch.compileError(), 0, cases.size(), duration, List.of(), null, null, null);
         }
 
         List<TestCaseResult> results = new ArrayList<>();
@@ -148,7 +176,7 @@ public class JudgeService {
         else if (passedCount == cases.size()) verdict = Verdict.ACCEPTED;
         else verdict = Verdict.WRONG_ANSWER;
 
-        return new JudgeResponse(verdict, null, passedCount, cases.size(), duration, results, null);
+        return new JudgeResponse(verdict, null, passedCount, cases.size(), duration, results, null, null, null);
     }
 
     /** Compares two outputs ignoring trailing whitespace per line and trailing blank lines. */
