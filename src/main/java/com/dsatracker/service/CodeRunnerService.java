@@ -29,8 +29,12 @@ import java.util.regex.Pattern;
 public class CodeRunnerService {
 
     private static final Pattern PUBLIC_CLASS = Pattern.compile("public\\s+(?:final\\s+)?class\\s+(\\w+)");
-    private static final Duration COMPILE_TIMEOUT = Duration.ofSeconds(10);
-    private static final Duration RUN_TIMEOUT = Duration.ofSeconds(8);
+    // Generous on purpose: this runs on a CPU-constrained free-tier instance, and each
+    // compile/run shells out to a *fresh* javac/java process (full JVM startup cost paid
+    // every time, on top of the actual work) -- 10s/8s was tight enough that a perfectly
+    // valid Java solution could trip "Compilation timed out." under any load.
+    private static final Duration COMPILE_TIMEOUT = Duration.ofSeconds(25);
+    private static final Duration RUN_TIMEOUT = Duration.ofSeconds(12);
     private static final int MAX_OUTPUT_CHARS = 20_000;
 
     /** One test case's raw execution result, before it's compared against an expected output. */
