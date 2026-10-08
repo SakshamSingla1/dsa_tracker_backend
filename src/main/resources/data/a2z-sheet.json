@@ -7274,7 +7274,7 @@
         "externalUrl": "https://leetcode.com/problems/alien-dictionary/",
         "timeComplexity": "O(V+E)",
         "spaceComplexity": "O(V)",
-        "statement": "Given a list of words sorted according to an unknown alphabet, determine the order of the letters in that alphabet. Input: k on the first line, then k lines of words, already sorted according to the alien alphabet. Output the alien letter order as one string with no separators (using the canonical order from Kahn's algorithm, smallest-letter-first on ties), or \"INVALID\" if the given order is contradictory.",
+        "statement": "Given a list of words sorted according to an unknown alphabet, determine the order of the letters in that alphabet. Input: k on the first line, then k lines of words, already sorted according to the alien alphabet. Output the alien letter order as one string with no separators (using the canonical order from Kahn's algorithm, smallest-letter-first on ties), or an empty string if the given order is contradictory.",
         "exampleInput": "words = [\"wrt\",\"wrf\",\"er\",\"ett\",\"rftt\"]",
         "exampleOutput": "\"wertf\"",
         "testCases": [
@@ -7285,7 +7285,7 @@
           },
           {
             "input": "2\nabc\nab",
-            "expectedOutput": "INVALID",
+            "expectedOutput": "",
             "sample": false
           }
         ]

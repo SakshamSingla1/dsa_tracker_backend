@@ -2738,7 +2738,7 @@
           "Topological Sort"
         ],
         "externalUrl": "https://leetcode.com/problems/alien-dictionary/",
-        "statement": "You're given a list of words from an alien language's dictionary, sorted lexicographically by that language's unknown alphabet (using lowercase English letters). Derive one valid ordering of the letters that appear, using Kahn's algorithm with this tie-break: among letters currently available (no remaining constraints), always output the alphabetically-smallest one next. If the input is contradictory (a cycle), or a word appears before a proper prefix of itself (which can never happen in a validly sorted dictionary), output \"invalid\". Input: k on the first line, then k words, one per line. Output: the derived letter ordering as a single string with no spaces, or \"invalid\".",
+        "statement": "You're given a list of words from an alien language's dictionary, sorted lexicographically by that language's unknown alphabet (using lowercase English letters). Derive one valid ordering of the letters that appear, using Kahn's algorithm with this tie-break: among letters currently available (no remaining constraints), always output the alphabetically-smallest one next. If the input is contradictory (a cycle), or a word appears before a proper prefix of itself (which can never happen in a validly sorted dictionary), output an empty string. Input: k on the first line, then k words, one per line. Output: the derived letter ordering as a single string with no spaces, or an empty string if invalid.",
         "timeComplexity": "O(C)",
         "spaceComplexity": "O(1) (bounded by the 26-letter alphabet)",
         "exampleInput": "words = [\"wrt\",\"wrf\",\"er\",\"ett\",\"rftt\"]",
@@ -2759,7 +2759,7 @@
           },
           {
             "input": "2\nabc\nab",
-            "expectedOutput": "invalid",
+            "expectedOutput": "",
             "sample": false
           }
         ]

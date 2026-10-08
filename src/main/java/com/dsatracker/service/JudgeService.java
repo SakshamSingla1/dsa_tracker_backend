@@ -116,7 +116,7 @@ public class JudgeService {
 
         ComplexityEstimateResponse complexity = result.verdict() == Verdict.COMPILE_ERROR
                 ? null
-                : toComplexityResponse(complexityAnalyzerService.analyze(request.code()));
+                : toComplexityResponse(complexityAnalyzerService.analyze(request.code(), request.language()));
 
         return new JudgeResponse(
                 result.verdict(), result.compileError(), result.passedCount(), result.totalCount(),
