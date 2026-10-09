@@ -39,4 +39,10 @@ public interface SubmissionRepository extends JpaRepository<Submission, Long> {
     }
 
     void deleteAllByUserId(Long userId);
+
+    /** Guards admin problem deletion -- a problem with recorded submissions can't be deleted
+     *  without orphaning real history, so this backs a 409 rather than a FK-violation 500. */
+    boolean existsByProblemId(Long problemId);
+
+    long countBySubmittedAtAfter(Instant cutoff);
 }

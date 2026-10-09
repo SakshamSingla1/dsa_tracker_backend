@@ -2,9 +2,12 @@ package com.dsatracker.model;
 
 import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
+import jakarta.persistence.FetchType;
 import jakarta.persistence.GeneratedValue;
 import jakarta.persistence.GenerationType;
 import jakarta.persistence.Id;
+import jakarta.persistence.JoinColumn;
+import jakarta.persistence.ManyToOne;
 import jakarta.persistence.Table;
 import jakarta.persistence.UniqueConstraint;
 
@@ -39,6 +42,21 @@ public class User {
 
     @Column(nullable = false)
     private Instant createdAt = Instant.now();
+
+    /** Null for every ordinary student (the default/existing state of every row today) --
+     *  only set for admin-portal users. EAGER: {@link com.dsatracker.security.JwtAuthFilter}
+     *  needs the role's permissions on every request, so this widens the user lookup it
+     *  already does rather than adding a second query. */
+    @ManyToOne(fetch = FetchType.EAGER)
+    @JoinColumn(name = "role_id")
+    private Role role;
+
+    /** columnDefinition carries an explicit DEFAULT for the same reason as {@link #xp}'s --
+     *  Hibernate's ddl-auto=update ALTER TABLE needs a value to backfill existing rows with
+     *  when adding this NOT NULL column. Disabling an account (not deleting the role/FK) is
+     *  what actually revokes access immediately, since JwtAuthFilter re-checks this on every request. */
+    @Column(nullable = false, columnDefinition = "boolean not null default true")
+    private boolean enabled = true;
 
     public Long getId() {
         return id;
@@ -94,5 +112,21 @@ public class User {
 
     public void setCreatedAt(Instant createdAt) {
         this.createdAt = createdAt;
+    }
+
+    public Role getRole() {
+        return role;
+    }
+
+    public void setRole(Role role) {
+        this.role = role;
+    }
+
+    public boolean isEnabled() {
+        return enabled;
+    }
+
+    public void setEnabled(boolean enabled) {
+        this.enabled = enabled;
     }
 }

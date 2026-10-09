@@ -24,7 +24,9 @@ services:
         sync: false
       - key: JWT_SECRET
         generateValue: true
-      # Your deployed frontend's origin (e.g. https://dsatracker.sakshamsingla.com).
+      # Comma-separated list of every deployed frontend origin, e.g.
+      # "https://dsatracker.sakshamsingla.com,https://dsatracker-admin.sakshamsingla.com" --
+      # add the admin-frontend app's own deployed origin here once it has one.
       # sync: false so dashboard edits survive future git-triggered blueprint syncs.
       - key: CORS_ALLOWED_ORIGINS
         sync: false
@@ -40,3 +42,8 @@ services:
       # create another account, then back to "false".
       - key: REGISTRATION_ENABLED
         value: "false"
+      # The email of the account to make the first admin-portal "Super Admin" -- set once,
+      # then it's safe to leave set permanently (see AdminBootstrapSeeder: never reassigns a
+      # role once one exists, never creates an account). sync: false, not committed either way.
+      - key: ADMIN_BOOTSTRAP_EMAIL
+        sync: false

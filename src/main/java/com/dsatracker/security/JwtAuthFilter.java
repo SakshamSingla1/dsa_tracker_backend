@@ -8,6 +8,8 @@ import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
 import org.springframework.lang.NonNull;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
+import org.springframework.security.core.GrantedAuthority;
+import org.springframework.security.core.authority.SimpleGrantedAuthority;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.stereotype.Component;
 import org.springframework.web.filter.OncePerRequestFilter;
@@ -40,8 +42,11 @@ public class JwtAuthFilter extends OncePerRequestFilter {
                 Long userId = jwtService.extractUserId(token);
                 if (userId != null && SecurityContextHolder.getContext().getAuthentication() == null) {
                     User user = userRepository.findById(userId).orElse(null);
-                    if (user != null) {
-                        var auth = new UsernamePasswordAuthenticationToken(user, null, List.of());
+                    // Disabled accounts are rejected on every request (not just at login) --
+                    // re-checked fresh from the DB each time, so disabling someone's role/account
+                    // takes effect immediately without needing a token-revocation list.
+                    if (user != null && user.isEnabled()) {
+                        var auth = new UsernamePasswordAuthenticationToken(user, null, authoritiesFor(user));
                         SecurityContextHolder.getContext().setAuthentication(auth);
                     }
                 }
@@ -51,5 +56,19 @@ public class JwtAuthFilter extends OncePerRequestFilter {
         }
 
         filterChain.doFilter(request, response);
+    }
+
+    /** Permission codes computed fresh from the DB every request, never embedded in the JWT
+     *  itself -- the token lives 30 days (app.jwt.expiration-ms), so a stale copy of a user's
+     *  permissions would mean narrowing/revoking admin access has no effect until the token
+     *  expires. Role.permissions is EAGER, so this is the same findById query widened, not an
+     *  extra round trip. */
+    private List<GrantedAuthority> authoritiesFor(User user) {
+        if (user.getRole() == null) {
+            return List.of();
+        }
+        return user.getRole().getPermissions().stream()
+                .map(p -> (GrantedAuthority) new SimpleGrantedAuthority(p.getCode()))
+                .toList();
     }
 }

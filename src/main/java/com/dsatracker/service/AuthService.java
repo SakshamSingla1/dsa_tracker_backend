@@ -25,6 +25,8 @@ import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import org.springframework.web.server.ResponseStatusException;
 
+import java.util.List;
+
 @Service
 public class AuthService {
 
@@ -108,6 +110,9 @@ public class AuthService {
         if (request.password() == null || !passwordEncoder.matches(request.password(), user.getPasswordHash())) {
             throw new ResponseStatusException(HttpStatus.UNAUTHORIZED, "Incorrect email or password.");
         }
+        if (!user.isEnabled()) {
+            throw new ResponseStatusException(HttpStatus.FORBIDDEN, "This account has been disabled.");
+        }
 
         return toAuthResponse(user);
     }
@@ -184,6 +189,9 @@ public class AuthService {
 
     private AuthResponse toAuthResponse(User user) {
         String token = jwtService.generateToken(user.getId(), user.getEmail());
-        return new AuthResponse(token, user.getId(), user.getEmail(), user.getDisplayName());
+        List<String> permissions = user.getRole() == null
+                ? List.of()
+                : user.getRole().getPermissions().stream().map(com.dsatracker.model.Permission::getCode).toList();
+        return new AuthResponse(token, user.getId(), user.getEmail(), user.getDisplayName(), permissions);
     }
 }

@@ -11,4 +11,7 @@ public interface CommentRepository extends JpaRepository<Comment, Long> {
     Optional<Comment> findByIdAndUserId(Long id, Long userId);
 
     void deleteAllByUserId(Long userId);
+
+    /** Guards admin problem deletion -- see {@link SubmissionRepository#existsByProblemId}. */
+    boolean existsByProblemId(Long problemId);
 }

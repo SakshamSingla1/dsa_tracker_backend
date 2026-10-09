@@ -17,4 +17,7 @@ public interface UserProgressRepository extends JpaRepository<UserProgress, Long
     List<UserProgress> findAllByStatusAndProblem_Topic_Sheet_Slug(Status status, String sheetSlug);
 
     void deleteAllByUserId(Long userId);
+
+    /** Guards admin problem deletion -- see {@link SubmissionRepository#existsByProblemId}. */
+    boolean existsByProblemId(Long problemId);
 }
