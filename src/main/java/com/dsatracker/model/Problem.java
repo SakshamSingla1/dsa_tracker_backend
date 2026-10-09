@@ -53,20 +53,26 @@ public class Problem {
     @Column(length = 500)
     private String exampleOutput;
 
-    /** Worked examples shown on the problem page, richer than the single legacy input/output pair. */
-    @ElementCollection(fetch = FetchType.EAGER)
+    /**
+     * Worked examples shown on the problem page, richer than the single legacy input/output pair.
+     * LAZY on purpose -- {@code examples}/{@code constraints}/{@code hints} are only needed on a
+     * single problem's detail view, never the sheet/topic list, which loads every problem at once
+     * (see ProblemSummaryResponse). EAGER here would mean every list load pays for data nobody's
+     * looking at yet.
+     */
+    @ElementCollection(fetch = FetchType.LAZY)
     @CollectionTable(name = "problem_examples", joinColumns = @JoinColumn(name = "problem_id"))
     @OrderColumn(name = "example_order")
     private List<Example> examples = new ArrayList<>();
 
-    @ElementCollection(fetch = FetchType.EAGER)
+    @ElementCollection(fetch = FetchType.LAZY)
     @CollectionTable(name = "problem_constraints", joinColumns = @JoinColumn(name = "problem_id"))
     @Column(name = "constraint_text", length = 500)
     @OrderColumn(name = "constraint_order")
     private List<String> constraints = new ArrayList<>();
 
     /** Progressive hints, revealed one at a time on request instead of spoiling the approach up front. */
-    @ElementCollection(fetch = FetchType.EAGER)
+    @ElementCollection(fetch = FetchType.LAZY)
     @CollectionTable(name = "problem_hints", joinColumns = @JoinColumn(name = "problem_id"))
     @Column(name = "hint_text", length = 1000)
     @OrderColumn(name = "hint_order")

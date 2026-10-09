@@ -8,7 +8,16 @@ import com.dsatracker.model.UserProgress;
 import java.time.LocalDate;
 import java.util.List;
 
-public record ProblemResponse(
+/**
+ * Lightweight problem view for list endpoints (topics/progress-summary), which render every
+ * problem in a sheet at once. Deliberately omits {@code examples}/{@code constraints}/{@code hints}
+ * (separate @ElementCollection tables -- each one is an extra batched round trip for the whole
+ * sheet, several seconds of added latency on a cross-region DB) and {@code sampleTests}/
+ * {@code totalTestCases} (forces loading the testCases association). None of those are rendered
+ * by a collapsed/list problem row anyway -- only the Solve view needs them, and it fetches a
+ * single problem's full {@link ProblemResponse} on demand instead.
+ */
+public record ProblemSummaryResponse(
         Long id,
         String title,
         Difficulty difficulty,
@@ -17,9 +26,6 @@ public record ProblemResponse(
         String spaceComplexity,
         String exampleInput,
         String exampleOutput,
-        List<ExampleResponse> examples,
-        List<String> constraints,
-        List<String> hints,
         String editorialUrl,
         String videoUrl,
         List<String> tags,
@@ -29,18 +35,11 @@ public record ProblemResponse(
         LocalDate completedAt,
         LocalDate reviewDueAt,
         boolean bookmarked,
-        int orderIndex,
-        List<SampleTestCase> sampleTests,
-        int totalTestCases
+        int orderIndex
 ) {
     /** progress may be null -- a problem the current user hasn't touched yet is implicitly TODO. */
-    public static ProblemResponse from(Problem p, UserProgress progress) {
-        List<SampleTestCase> sampleTests = p.getTestCases().stream()
-                .filter(tc -> tc.isSample())
-                .map(tc -> new SampleTestCase(tc.getInput(), tc.getExpectedOutput()))
-                .toList();
-
-        return new ProblemResponse(
+    public static ProblemSummaryResponse from(Problem p, UserProgress progress) {
+        return new ProblemSummaryResponse(
                 p.getId(),
                 p.getTitle(),
                 p.getDifficulty(),
@@ -49,14 +48,6 @@ public record ProblemResponse(
                 p.getSpaceComplexity(),
                 p.getExampleInput(),
                 p.getExampleOutput(),
-                p.getExamples().stream().map(ExampleResponse::from).toList(),
-                // constraints/hints are LAZY (see Problem.java) -- .stream().toList() forces them
-                // to materialize into a plain list now, while the transaction/session is still
-                // open. Passing the raw Hibernate-backed collection through would only get
-                // touched later by Jackson during response serialization, after the session has
-                // already closed, throwing LazyInitializationException.
-                p.getConstraints().stream().toList(),
-                p.getHints().stream().toList(),
                 p.getEditorialUrl(),
                 p.getVideoUrl(),
                 p.getTags(),
@@ -66,9 +57,7 @@ public record ProblemResponse(
                 progress != null ? progress.getCompletedAt() : null,
                 progress != null ? progress.getReviewDueAt() : null,
                 progress != null && progress.isBookmarked(),
-                p.getOrderIndex(),
-                sampleTests,
-                p.getTestCases().size()
+                p.getOrderIndex()
         );
     }
 }
