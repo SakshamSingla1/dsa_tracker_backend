@@ -1,5 +1,6 @@
 package com.dsatracker.repository;
 
+import com.dsatracker.dto.SubmissionAnalyticsRow;
 import com.dsatracker.model.Submission;
 import com.dsatracker.model.User;
 import com.dsatracker.model.Verdict;
@@ -15,10 +16,12 @@ public interface SubmissionRepository extends JpaRepository<Submission, Long> {
     List<Submission> findAllByUserIdAndProblemIdOrderBySubmittedAtDesc(Long userId, Long problemId);
     Optional<Submission> findByIdAndUserId(Long id, Long userId);
 
-    /** Fetches a user's full submission history with problem+topic eagerly joined, so analytics
-     *  aggregation (by verdict/language/topic/day) can run in memory without N+1 queries. */
-    @Query("select s from Submission s join fetch s.problem p join fetch p.topic where s.user.id = :userId")
-    List<Submission> findAllByUserIdWithProblemAndTopic(@Param("userId") Long userId);
+    /** Lean projection of a user's full submission history for analytics aggregation (by
+     *  verdict/language/topic/day) -- selects only the columns that aggregation actually reads,
+     *  skipping Submission.code (a @Lob up to 50,000 chars/row) entirely. */
+    @Query("select new com.dsatracker.dto.SubmissionAnalyticsRow(s.verdict, s.language, s.submittedAt, t.name) " +
+            "from Submission s join s.problem p join p.topic t where s.user.id = :userId")
+    List<SubmissionAnalyticsRow> findAnalyticsRowsByUserId(@Param("userId") Long userId);
 
     /** One row per user's distinct-problems-accepted count since {@code cutoff}, optionally scoped to
      *  one sheet -- backs the time-scoped (WEEK/MONTH) leaderboard views, since {@code UserProgress}

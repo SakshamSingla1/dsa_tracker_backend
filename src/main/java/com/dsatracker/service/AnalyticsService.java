@@ -1,11 +1,11 @@
 package com.dsatracker.service;
 
 import com.dsatracker.dto.AnalyticsSummaryResponse;
+import com.dsatracker.dto.ProblemRecommendationRow;
 import com.dsatracker.dto.RecommendationResponse;
+import com.dsatracker.dto.SubmissionAnalyticsRow;
 import com.dsatracker.model.Difficulty;
-import com.dsatracker.model.Problem;
 import com.dsatracker.model.Status;
-import com.dsatracker.model.Submission;
 import com.dsatracker.model.UserProgress;
 import com.dsatracker.model.Verdict;
 import com.dsatracker.repository.ProblemRepository;
@@ -59,24 +59,23 @@ public class AnalyticsService {
 
     @Transactional(readOnly = true)
     public AnalyticsSummaryResponse getSummary(Long userId, int days) {
-        List<Submission> submissions = submissionRepository.findAllByUserIdWithProblemAndTopic(userId);
+        List<SubmissionAnalyticsRow> submissions = submissionRepository.findAnalyticsRowsByUserId(userId);
 
         long total = submissions.size();
-        long accepted = submissions.stream().filter(s -> s.getVerdict() == Verdict.ACCEPTED).count();
+        long accepted = submissions.stream().filter(s -> s.verdict() == Verdict.ACCEPTED).count();
         double acceptanceRate = total == 0 ? 0.0 : (double) accepted / total;
 
         Map<String, Long> byVerdict = submissions.stream()
-                .collect(Collectors.groupingBy(s -> s.getVerdict().name(), LinkedHashMap::new, Collectors.counting()));
+                .collect(Collectors.groupingBy(s -> s.verdict().name(), LinkedHashMap::new, Collectors.counting()));
 
         Map<String, Long> byLanguage = submissions.stream()
-                .collect(Collectors.groupingBy(s -> s.getLanguage().name(), LinkedHashMap::new, Collectors.counting()));
+                .collect(Collectors.groupingBy(s -> s.language().name(), LinkedHashMap::new, Collectors.counting()));
 
         Map<String, long[]> topicAgg = new LinkedHashMap<>();
-        for (Submission s : submissions) {
-            String topicName = s.getProblem().getTopic().getName();
-            long[] counts = topicAgg.computeIfAbsent(topicName, k -> new long[2]);
+        for (SubmissionAnalyticsRow s : submissions) {
+            long[] counts = topicAgg.computeIfAbsent(s.topicName(), k -> new long[2]);
             counts[0]++;
-            if (s.getVerdict() == Verdict.ACCEPTED) counts[1]++;
+            if (s.verdict() == Verdict.ACCEPTED) counts[1]++;
         }
         List<AnalyticsSummaryResponse.TopicBreakdown> byTopic = topicAgg.entrySet().stream()
                 .map(e -> new AnalyticsSummaryResponse.TopicBreakdown(e.getKey(), e.getValue()[0], e.getValue()[1]))
@@ -86,8 +85,8 @@ public class AnalyticsService {
         Instant cutoff = Instant.now().minus(days, ChronoUnit.DAYS);
         ZoneId zone = ZoneId.systemDefault();
         Map<LocalDate, Long> dailyAgg = submissions.stream()
-                .filter(s -> !s.getSubmittedAt().isBefore(cutoff))
-                .collect(Collectors.groupingBy(s -> s.getSubmittedAt().atZone(zone).toLocalDate(), Collectors.counting()));
+                .filter(s -> !s.submittedAt().isBefore(cutoff))
+                .collect(Collectors.groupingBy(s -> s.submittedAt().atZone(zone).toLocalDate(), Collectors.counting()));
         List<AnalyticsSummaryResponse.DailyCount> dailyActivity = dailyAgg.entrySet().stream()
                 .map(e -> new AnalyticsSummaryResponse.DailyCount(e.getKey(), e.getValue()))
                 .sorted(Comparator.comparing(AnalyticsSummaryResponse.DailyCount::date))
@@ -105,14 +104,13 @@ public class AnalyticsService {
      */
     @Transactional(readOnly = true)
     public List<RecommendationResponse> getRecommendations(Long userId) {
-        List<Submission> submissions = submissionRepository.findAllByUserIdWithProblemAndTopic(userId);
+        List<SubmissionAnalyticsRow> submissions = submissionRepository.findAnalyticsRowsByUserId(userId);
 
         Map<String, long[]> topicAgg = new LinkedHashMap<>(); // name -> [attempted, accepted]
-        for (Submission s : submissions) {
-            String topicName = s.getProblem().getTopic().getName();
-            long[] counts = topicAgg.computeIfAbsent(topicName, k -> new long[2]);
+        for (SubmissionAnalyticsRow s : submissions) {
+            long[] counts = topicAgg.computeIfAbsent(s.topicName(), k -> new long[2]);
             counts[0]++;
-            if (s.getVerdict() == Verdict.ACCEPTED) counts[1]++;
+            if (s.verdict() == Verdict.ACCEPTED) counts[1]++;
         }
 
         List<String> weakTopics = topicAgg.entrySet().stream()
@@ -124,7 +122,7 @@ public class AnalyticsService {
 
         Map<Long, UserProgress> progressByProblemId = userProgressRepository.findAllByUserId(userId).stream()
                 .collect(Collectors.toMap(up -> up.getProblem().getId(), p -> p));
-        List<Problem> allProblems = problemRepository.findAll();
+        List<ProblemRecommendationRow> allProblems = problemRepository.findAllForRecommendations();
 
         List<RecommendationResponse> recommendations = new ArrayList<>();
         if (!weakTopics.isEmpty()) {
@@ -140,7 +138,7 @@ public class AnalyticsService {
         if (recommendations.isEmpty()) {
             Set<String> attemptedTopics = topicAgg.keySet();
             Set<String> unexploredTopics = allProblems.stream()
-                    .map(p -> p.getTopic().getName())
+                    .map(ProblemRecommendationRow::topicName)
                     .filter(name -> !attemptedTopics.contains(name))
                     .collect(Collectors.toCollection(java.util.LinkedHashSet::new));
             for (String topicName : unexploredTopics) {
@@ -154,19 +152,19 @@ public class AnalyticsService {
     }
 
     private void addUnsolvedFromTopic(
-            List<RecommendationResponse> recommendations, List<Problem> allProblems,
+            List<RecommendationResponse> recommendations, List<ProblemRecommendationRow> allProblems,
             Map<Long, UserProgress> progressByProblemId, String topicName, String reason
     ) {
         allProblems.stream()
-                .filter(p -> p.getTopic().getName().equals(topicName))
+                .filter(p -> p.topicName().equals(topicName))
                 .filter(p -> {
-                    UserProgress progress = progressByProblemId.get(p.getId());
+                    UserProgress progress = progressByProblemId.get(p.id());
                     return progress == null || progress.getStatus() != Status.DONE;
                 })
-                .sorted(Comparator.comparing(p -> difficultyRank(p.getDifficulty())))
+                .sorted(Comparator.comparing(p -> difficultyRank(p.difficulty())))
                 .limit(MAX_PER_TOPIC)
                 .forEach(p -> recommendations.add(new RecommendationResponse(
-                        p.getId(), p.getTitle(), p.getDifficulty().name(), topicName, reason
+                        p.id(), p.title(), p.difficulty().name(), topicName, reason
                 )));
     }
 
