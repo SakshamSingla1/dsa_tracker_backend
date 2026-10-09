@@ -6,9 +6,13 @@ import com.dsatracker.dto.DeleteAccountRequest;
 import com.dsatracker.dto.LoginRequest;
 import com.dsatracker.dto.RegisterRequest;
 import com.dsatracker.model.User;
+import com.dsatracker.repository.CommentRepository;
 import com.dsatracker.repository.ContestProblemRepository;
 import com.dsatracker.repository.ContestSessionRepository;
+import com.dsatracker.repository.InterviewMessageRepository;
+import com.dsatracker.repository.InterviewSessionRepository;
 import com.dsatracker.repository.SubmissionRepository;
+import com.dsatracker.repository.TutorMessageRepository;
 import com.dsatracker.repository.UserProgressRepository;
 import com.dsatracker.repository.UserRepository;
 import com.dsatracker.security.JwtService;
@@ -20,6 +24,7 @@ import org.mockito.Mock;
 import org.mockito.junit.jupiter.MockitoExtension;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.security.crypto.password.PasswordEncoder;
+import org.springframework.test.util.ReflectionTestUtils;
 import org.springframework.web.server.ResponseStatusException;
 
 import static org.assertj.core.api.Assertions.assertThat;
@@ -37,6 +42,10 @@ class AuthServiceTest {
     @Mock ContestSessionRepository contestSessionRepository;
     @Mock SubmissionRepository submissionRepository;
     @Mock UserProgressRepository userProgressRepository;
+    @Mock CommentRepository commentRepository;
+    @Mock TutorMessageRepository tutorMessageRepository;
+    @Mock InterviewMessageRepository interviewMessageRepository;
+    @Mock InterviewSessionRepository interviewSessionRepository;
     @Mock JwtService jwtService;
 
     // Real BCrypt, not mocked -- change/delete-password tests need genuine
@@ -52,8 +61,21 @@ class AuthServiceTest {
         authService = new AuthService(
                 userRepository, passwordEncoder, jwtService,
                 contestProblemRepository, contestSessionRepository, submissionRepository, userProgressRepository,
+                commentRepository, tutorMessageRepository, interviewMessageRepository, interviewSessionRepository,
                 xpService
         );
+        // Registration defaults closed in production; these tests exercise register() itself,
+        // not the lockdown, so open it here the way the dev/local profile always has it.
+        ReflectionTestUtils.setField(authService, "registrationEnabled", true);
+    }
+
+    @Test
+    void register_rejectsWhenRegistrationIsDisabled() {
+        ReflectionTestUtils.setField(authService, "registrationEnabled", false);
+
+        assertThatThrownBy(() -> authService.register(new RegisterRequest("test@example.com", "password123", "Name")))
+                .isInstanceOf(ResponseStatusException.class)
+                .hasMessageContaining("Registration is closed");
     }
 
     private User userWithPassword(String rawPassword) {
@@ -201,6 +223,10 @@ class AuthServiceTest {
 
         verify(contestProblemRepository).deleteAllByContestSession_User_Id(7L);
         verify(contestSessionRepository).deleteAllByUserId(7L);
+        verify(interviewMessageRepository).deleteAllBySession_User_Id(7L);
+        verify(interviewSessionRepository).deleteAllByUserId(7L);
+        verify(tutorMessageRepository).deleteAllByUserId(7L);
+        verify(commentRepository).deleteAllByUserId(7L);
         verify(submissionRepository).deleteAllByUserId(7L);
         verify(userProgressRepository).deleteAllByUserId(7L);
         verify(userRepository).delete(user);

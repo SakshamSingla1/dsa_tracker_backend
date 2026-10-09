@@ -142,20 +142,22 @@ public class ContestService {
                 .toList();
     }
 
-    /** Called by JudgeService on an ACCEPTED submit. A no-op unless the user has an active
-     *  session (still within its time window) containing this problem, unsolved. */
+    /** Called by JudgeService on an ACCEPTED submit. A no-op unless {@code contestSessionId}
+     *  names a session owned by this user that is still IN_PROGRESS and within its time
+     *  window, and that session actually contains this problem, unsolved. */
     @Transactional
-    public void markSolvedIfActive(User user, Long problemId) {
-        List<ContestSession> active = contestSessionRepository.findAllByUserIdAndStatus(user.getId(), ContestStatus.IN_PROGRESS);
-        for (ContestSession session : active) {
-            if (Instant.now().isAfter(session.getEndsAt())) continue;
-            contestProblemRepository.findByContestSessionIdAndProblemId(session.getId(), problemId)
-                    .filter(cp -> cp.getSolvedAt() == null)
-                    .ifPresent(cp -> {
-                        cp.setSolvedAt(Instant.now());
-                        contestProblemRepository.save(cp);
-                    });
-        }
+    public void markSolvedIfActive(User user, Long contestSessionId, Long problemId) {
+        if (contestSessionId == null) return;
+        ContestSession session = contestSessionRepository.findByIdAndUserId(contestSessionId, user.getId()).orElse(null);
+        if (session == null || session.getStatus() != ContestStatus.IN_PROGRESS) return;
+        if (Instant.now().isAfter(session.getEndsAt())) return;
+
+        contestProblemRepository.findByContestSessionIdAndProblemId(session.getId(), problemId)
+                .filter(cp -> cp.getSolvedAt() == null)
+                .ifPresent(cp -> {
+                    cp.setSolvedAt(Instant.now());
+                    contestProblemRepository.save(cp);
+                });
     }
 
     private ContestSession findOwned(User user, Long contestId) {

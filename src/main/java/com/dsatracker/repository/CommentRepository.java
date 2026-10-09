@@ -9,4 +9,6 @@ import java.util.Optional;
 public interface CommentRepository extends JpaRepository<Comment, Long> {
     List<Comment> findAllByProblemIdOrderByCreatedAtAsc(Long problemId);
     Optional<Comment> findByIdAndUserId(Long id, Long userId);
+
+    void deleteAllByUserId(Long userId);
 }

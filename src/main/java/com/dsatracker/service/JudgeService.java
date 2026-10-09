@@ -95,23 +95,29 @@ public class JudgeService {
                         p.setProblem(problem);
                         return p;
                     });
-            boolean firstTimeDone = progress.getStatus() != Status.DONE;
-            if (firstTimeDone) {
+            if (progress.getStatus() != Status.DONE) {
                 progress.setCompletedAt(LocalDate.now());
             }
             progress.setStatus(Status.DONE);
+            progress.setReviewStage(0);
+            progress.setReviewDueAt(null);
+
+            // Awarded once ever per (user, problem), independent of how many times the
+            // status later cycles through REVISE and back to DONE via resubmission.
+            boolean firstTimeEverSolved = !progress.isXpAwarded();
+            if (firstTimeEverSolved) {
+                progress.setXpAwarded(true);
+            }
             userProgressRepository.save(progress);
 
-            if (firstTimeDone) {
+            if (firstTimeEverSolved) {
                 long gain = xpService.xpForDifficulty(problem.getDifficulty());
                 user.setXp(user.getXp() + gain);
                 userRepository.save(user);
                 xpAwarded = gain;
             }
 
-            if (request.contestSessionId() != null) {
-                contestService.markSolvedIfActive(user, problemId);
-            }
+            contestService.markSolvedIfActive(user, request.contestSessionId(), problemId);
         }
 
         ComplexityEstimateResponse complexity = result.verdict() == Verdict.COMPILE_ERROR

@@ -7,4 +7,6 @@ import java.util.List;
 
 public interface InterviewMessageRepository extends JpaRepository<InterviewMessage, Long> {
     List<InterviewMessage> findAllBySessionIdOrderByCreatedAtAsc(Long sessionId);
+
+    void deleteAllBySession_User_Id(Long userId);
 }

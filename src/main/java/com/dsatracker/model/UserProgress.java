@@ -53,6 +53,10 @@ public class UserProgress {
     /** Index into the Leitner interval ladder (see ProblemService.REVIEW_INTERVALS). Resets to 0 on a fresh REVISE or a "forgot". */
     private int reviewStage;
 
+    /** Set permanently the first time this user ever earns XP for this problem, so cycling
+     *  status (DONE -&gt; REVISE -&gt; DONE) via resubmission can't re-award XP. Never cleared. */
+    private boolean xpAwarded;
+
     public Long getId() {
         return id;
     }
@@ -123,5 +127,13 @@ public class UserProgress {
 
     public void setReviewStage(int reviewStage) {
         this.reviewStage = reviewStage;
+    }
+
+    public boolean isXpAwarded() {
+        return xpAwarded;
+    }
+
+    public void setXpAwarded(boolean xpAwarded) {
+        this.xpAwarded = xpAwarded;
     }
 }

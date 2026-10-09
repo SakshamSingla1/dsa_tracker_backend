@@ -34,3 +34,9 @@ services:
       # deploys and runs fine without it -- only set this once you actually want AI live.
       - key: GEMINI_API_KEY
         sync: false
+      # This is a single-user personal tool with an unsandboxed code runner (see
+      # CodeRunnerService) -- closing registration means only the one account already
+      # created here can ever log in. Flip to "true" temporarily if you ever need to
+      # create another account, then back to "false".
+      - key: REGISTRATION_ENABLED
+        value: "false"

@@ -9,4 +9,5 @@ public interface TutorMessageRepository extends JpaRepository<TutorMessage, Long
     List<TutorMessage> findAllByUserIdAndProblemIdOrderByCreatedAtAsc(Long userId, Long problemId);
 
     void deleteAllByUserIdAndProblemId(Long userId, Long problemId);
+    void deleteAllByUserId(Long userId);
 }

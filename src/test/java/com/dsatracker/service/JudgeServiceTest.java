@@ -179,11 +179,11 @@ class JudgeServiceTest {
 
         judgeService.submit(user, 1L, new JudgeRequest(Language.JAVA, "code", 55L));
 
-        verify(contestService).markSolvedIfActive(user, 1L);
+        verify(contestService).markSolvedIfActive(user, 55L, 1L);
     }
 
     @Test
-    void submit_doesNotTouchContestWhenNoContestSessionId() {
+    void submit_passesNullContestSessionIdThrough() {
         Problem problem = problemWithOneSample("5", "25");
         when(problemRepository.findById(1L)).thenReturn(Optional.of(problem));
         when(codeRunnerService.runBatch(any(), any(), anyList())).thenReturn(
@@ -199,7 +199,8 @@ class JudgeServiceTest {
 
         judgeService.submit(user, 1L, new JudgeRequest(Language.JAVA, "code", null));
 
-        verify(contestService, never()).markSolvedIfActive(any(), any());
+        // JudgeService always delegates; it's ContestService's own job to no-op on a null id.
+        verify(contestService).markSolvedIfActive(user, null, 1L);
     }
 
     @Test
@@ -218,7 +219,7 @@ class JudgeServiceTest {
 
         judgeService.submit(user, 1L, new JudgeRequest(Language.JAVA, "code", 55L));
 
-        verify(contestService, never()).markSolvedIfActive(any(), any());
+        verify(contestService, never()).markSolvedIfActive(any(), any(), any());
         verify(userProgressRepository, never()).save(any());
     }
 }

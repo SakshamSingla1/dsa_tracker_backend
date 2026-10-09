@@ -8,12 +8,17 @@ import com.dsatracker.dto.ProfileResponse;
 import com.dsatracker.dto.RegisterRequest;
 import com.dsatracker.dto.UpdateProfileRequest;
 import com.dsatracker.model.User;
+import com.dsatracker.repository.CommentRepository;
 import com.dsatracker.repository.ContestProblemRepository;
 import com.dsatracker.repository.ContestSessionRepository;
+import com.dsatracker.repository.InterviewMessageRepository;
+import com.dsatracker.repository.InterviewSessionRepository;
 import com.dsatracker.repository.SubmissionRepository;
+import com.dsatracker.repository.TutorMessageRepository;
 import com.dsatracker.repository.UserProgressRepository;
 import com.dsatracker.repository.UserRepository;
 import com.dsatracker.security.JwtService;
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.http.HttpStatus;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
@@ -30,7 +35,14 @@ public class AuthService {
     private final ContestSessionRepository contestSessionRepository;
     private final SubmissionRepository submissionRepository;
     private final UserProgressRepository userProgressRepository;
+    private final CommentRepository commentRepository;
+    private final TutorMessageRepository tutorMessageRepository;
+    private final InterviewMessageRepository interviewMessageRepository;
+    private final InterviewSessionRepository interviewSessionRepository;
     private final XpService xpService;
+
+    @Value("${app.registration.enabled}")
+    private boolean registrationEnabled;
 
     public AuthService(
             UserRepository userRepository,
@@ -40,6 +52,10 @@ public class AuthService {
             ContestSessionRepository contestSessionRepository,
             SubmissionRepository submissionRepository,
             UserProgressRepository userProgressRepository,
+            CommentRepository commentRepository,
+            TutorMessageRepository tutorMessageRepository,
+            InterviewMessageRepository interviewMessageRepository,
+            InterviewSessionRepository interviewSessionRepository,
             XpService xpService
     ) {
         this.userRepository = userRepository;
@@ -49,10 +65,17 @@ public class AuthService {
         this.contestSessionRepository = contestSessionRepository;
         this.submissionRepository = submissionRepository;
         this.userProgressRepository = userProgressRepository;
+        this.commentRepository = commentRepository;
+        this.tutorMessageRepository = tutorMessageRepository;
+        this.interviewMessageRepository = interviewMessageRepository;
+        this.interviewSessionRepository = interviewSessionRepository;
         this.xpService = xpService;
     }
 
     public AuthResponse register(RegisterRequest request) {
+        if (!registrationEnabled) {
+            throw new ResponseStatusException(HttpStatus.FORBIDDEN, "Registration is closed.");
+        }
         String email = normalizeEmail(request.email());
         if (email.isEmpty() || !email.contains("@")) {
             throw new ResponseStatusException(HttpStatus.BAD_REQUEST, "Enter a valid email address.");
@@ -125,8 +148,8 @@ public class AuthService {
 
     /**
      * Permanently deletes the caller's account and every row that belongs to them, in FK-safe
-     * order (contest problems -> contest sessions -> submissions -> progress -> the user row
-     * itself). Requires the current password as confirmation, exactly like {@link #changePassword}.
+     * order (children before parents, parents before the user row itself). Requires the current
+     * password as confirmation, exactly like {@link #changePassword}.
      */
     @Transactional
     public void deleteAccount(User user, DeleteAccountRequest request) {
@@ -137,6 +160,10 @@ public class AuthService {
         Long userId = user.getId();
         contestProblemRepository.deleteAllByContestSession_User_Id(userId);
         contestSessionRepository.deleteAllByUserId(userId);
+        interviewMessageRepository.deleteAllBySession_User_Id(userId);
+        interviewSessionRepository.deleteAllByUserId(userId);
+        tutorMessageRepository.deleteAllByUserId(userId);
+        commentRepository.deleteAllByUserId(userId);
         submissionRepository.deleteAllByUserId(userId);
         userProgressRepository.deleteAllByUserId(userId);
         userRepository.delete(user);

@@ -29,12 +29,21 @@ import java.util.regex.Pattern;
 public class CodeRunnerService {
 
     private static final Pattern PUBLIC_CLASS = Pattern.compile("public\\s+(?:final\\s+)?class\\s+(\\w+)");
+    // Top-level classes are conventionally unindented; this catches the common
+    // LeetCode-style "class Solution { ... }" with no "public" modifier, which
+    // the stricter PUBLIC_CLASS pattern above misses.
+    private static final Pattern TOP_LEVEL_CLASS = Pattern.compile("(?m)^(?:final\\s+)?class\\s+(\\w+)");
     // Generous on purpose: this runs on a CPU-constrained free-tier instance, and each
     // compile/run shells out to a *fresh* javac/java process (full JVM startup cost paid
     // every time, on top of the actual work) -- 10s/8s was tight enough that a perfectly
     // valid Java solution could trip "Compilation timed out." under any load.
     private static final Duration COMPILE_TIMEOUT = Duration.ofSeconds(25);
     private static final Duration RUN_TIMEOUT = Duration.ofSeconds(12);
+    // Caps total run time across all test cases in one batch -- RUN_TIMEOUT alone bounds
+    // each case, but a Hard problem with many cases and a borderline-slow solution could
+    // otherwise tie up the request thread for minutes. Cases left over once the budget
+    // is spent are reported as timed out without being executed.
+    private static final Duration MAX_BATCH_RUN_DURATION = Duration.ofSeconds(60);
     private static final int MAX_OUTPUT_CHARS = 20_000;
 
     /** One test case's raw execution result, before it's compared against an expected output. */
@@ -105,12 +114,7 @@ public class CodeRunnerService {
             return BatchRunResult.compileFailure(compile.stderr);
         }
 
-        List<CaseRun> cases = new ArrayList<>();
-        for (String stdin : stdins) {
-            long start = System.currentTimeMillis();
-            ExecResult run = execWithInput(workDir, RUN_TIMEOUT, writeStdin(workDir, stdin), "java", "-cp", workDir.toString(), className);
-            cases.add(toCaseRun(run, start));
-        }
+        List<CaseRun> cases = runCases(workDir, stdins, "java", "-cp", workDir.toString(), className);
         return new BatchRunResult(true, null, cases);
     }
 
@@ -127,12 +131,7 @@ public class CodeRunnerService {
             return BatchRunResult.compileFailure(compile.stderr);
         }
 
-        List<CaseRun> cases = new ArrayList<>();
-        for (String stdin : stdins) {
-            long start = System.currentTimeMillis();
-            ExecResult run = execWithInput(workDir, RUN_TIMEOUT, writeStdin(workDir, stdin), workDir.resolve(binaryName).toString());
-            cases.add(toCaseRun(run, start));
-        }
+        List<CaseRun> cases = runCases(workDir, stdins, workDir.resolve(binaryName).toString());
         return new BatchRunResult(true, null, cases);
     }
 
@@ -140,13 +139,26 @@ public class CodeRunnerService {
         Path sourceFile = workDir.resolve(fileName);
         Files.writeString(sourceFile, code, StandardCharsets.UTF_8);
 
+        List<CaseRun> cases = runCases(workDir, stdins, interpreterAndFile);
+        return new BatchRunResult(true, null, cases);
+    }
+
+    /** Runs {@code command} once per stdin, in order, stopping early once
+     *  {@link #MAX_BATCH_RUN_DURATION} has elapsed -- any cases left over are reported
+     *  as timed out without being executed. */
+    private List<CaseRun> runCases(Path workDir, List<String> stdins, String... command) throws IOException {
         List<CaseRun> cases = new ArrayList<>();
+        long deadline = System.currentTimeMillis() + MAX_BATCH_RUN_DURATION.toMillis();
         for (String stdin : stdins) {
+            if (System.currentTimeMillis() >= deadline) {
+                cases.add(new CaseRun("", "", null, true, 0));
+                continue;
+            }
             long start = System.currentTimeMillis();
-            ExecResult run = execWithInput(workDir, RUN_TIMEOUT, writeStdin(workDir, stdin), interpreterAndFile);
+            ExecResult run = execWithInput(workDir, RUN_TIMEOUT, writeStdin(workDir, stdin), command);
             cases.add(toCaseRun(run, start));
         }
-        return new BatchRunResult(true, null, cases);
+        return cases;
     }
 
     private CaseRun toCaseRun(ExecResult run, long start) {
@@ -166,6 +178,8 @@ public class CodeRunnerService {
 
     private String extractClassName(String code) {
         Matcher m = PUBLIC_CLASS.matcher(code);
+        if (m.find()) return m.group(1);
+        m = TOP_LEVEL_CLASS.matcher(code);
         return m.find() ? m.group(1) : "Main";
     }
 

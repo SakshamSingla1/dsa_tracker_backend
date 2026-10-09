@@ -172,13 +172,13 @@ class ContestServiceTest {
         session.setId(10L);
         session.setStartedAt(Instant.now());
         session.setDurationMinutes(30); // ends 30 min from now -- still active
-        when(contestSessionRepository.findAllByUserIdAndStatus(1L, ContestStatus.IN_PROGRESS)).thenReturn(List.of(session));
+        when(contestSessionRepository.findByIdAndUserId(10L, 1L)).thenReturn(Optional.of(session));
 
         ContestProblem cp = new ContestProblem();
         cp.setSolvedAt(null);
         when(contestProblemRepository.findByContestSessionIdAndProblemId(10L, 5L)).thenReturn(Optional.of(cp));
 
-        contestService.markSolvedIfActive(user, 5L);
+        contestService.markSolvedIfActive(user, 10L, 5L);
 
         ArgumentCaptor<ContestProblem> captor = ArgumentCaptor.forClass(ContestProblem.class);
         verify(contestProblemRepository).save(captor.capture());
@@ -191,13 +191,13 @@ class ContestServiceTest {
         session.setId(10L);
         session.setStartedAt(Instant.now());
         session.setDurationMinutes(30);
-        when(contestSessionRepository.findAllByUserIdAndStatus(1L, ContestStatus.IN_PROGRESS)).thenReturn(List.of(session));
+        when(contestSessionRepository.findByIdAndUserId(10L, 1L)).thenReturn(Optional.of(session));
 
         ContestProblem alreadySolved = new ContestProblem();
         alreadySolved.setSolvedAt(Instant.now().minus(1, ChronoUnit.HOURS));
         when(contestProblemRepository.findByContestSessionIdAndProblemId(10L, 5L)).thenReturn(Optional.of(alreadySolved));
 
-        contestService.markSolvedIfActive(user, 5L);
+        contestService.markSolvedIfActive(user, 10L, 5L);
 
         verify(contestProblemRepository, never()).save(any());
     }
@@ -208,9 +208,25 @@ class ContestServiceTest {
         expired.setId(10L);
         expired.setStartedAt(Instant.now().minus(2, ChronoUnit.HOURS));
         expired.setDurationMinutes(30); // ended over an hour ago
-        when(contestSessionRepository.findAllByUserIdAndStatus(1L, ContestStatus.IN_PROGRESS)).thenReturn(List.of(expired));
+        when(contestSessionRepository.findByIdAndUserId(10L, 1L)).thenReturn(Optional.of(expired));
 
-        contestService.markSolvedIfActive(user, 5L);
+        contestService.markSolvedIfActive(user, 10L, 5L);
+
+        verify(contestProblemRepository, never()).findByContestSessionIdAndProblemId(any(), any());
+    }
+
+    @Test
+    void markSolvedIfActive_noopWhenContestSessionIdIsNull() {
+        contestService.markSolvedIfActive(user, null, 5L);
+
+        verify(contestSessionRepository, never()).findByIdAndUserId(any(), any());
+    }
+
+    @Test
+    void markSolvedIfActive_noopWhenSessionBelongsToAnotherUser() {
+        when(contestSessionRepository.findByIdAndUserId(10L, 1L)).thenReturn(Optional.empty());
+
+        contestService.markSolvedIfActive(user, 10L, 5L);
 
         verify(contestProblemRepository, never()).findByContestSessionIdAndProblemId(any(), any());
     }
